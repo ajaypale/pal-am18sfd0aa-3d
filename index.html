@@ -1,0 +1,955 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PAL ENGINEERS - Certified 3D CAD Suite (Model AM18SFD0AA)</title>
+  <style>
+    :root {
+      --bg: #090d16;
+      --sidebar: #0f172a;
+      --card: rgba(15, 23, 42, 0.95);
+      --accent: #38bdf8;
+      --accent-gold: #f59e0b;
+      --accent-copper: #f97316;
+      --text: #f8fafc;
+      --text-dim: #94a3b8;
+      --border: rgba(255, 255, 255, 0.12);
+      --red: #cc2027;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
+    }
+    /* Sidebar */
+    .sidebar {
+      width: 340px;
+      min-width: 340px;
+      background: var(--sidebar);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+      z-index: 20;
+    }
+    .sidebar-header {
+      padding: 16px 20px;
+      background: #060911;
+      border-bottom: 2px solid var(--accent);
+    }
+    .brand-name {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--accent);
+      letter-spacing: 0.5px;
+    }
+    .brand-sub {
+      font-size: 11px;
+      color: var(--text-dim);
+      margin-top: 3px;
+      line-height: 1.3;
+    }
+    .section-label {
+      padding: 12px 18px 4px;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #64748b;
+      font-weight: 700;
+    }
+    .part-list {
+      display: flex;
+      flex-direction: column;
+      padding: 8px;
+      gap: 5px;
+    }
+    .part-btn {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid transparent;
+      color: var(--text-dim);
+      padding: 10px 14px;
+      border-radius: 6px;
+      text-align: left;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 600;
+      transition: all 0.15s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+    .part-btn:hover {
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text);
+      border-color: var(--border);
+    }
+    .part-btn.active {
+      background: rgba(56, 189, 248, 0.15);
+      border-color: var(--accent);
+      color: var(--accent);
+      font-weight: 700;
+    }
+    .part-btn.active.bundle {
+      background: rgba(245, 158, 11, 0.18);
+      border-color: var(--accent-gold);
+      color: var(--accent-gold);
+    }
+    .part-btn.active.explode {
+      background: rgba(244, 63, 94, 0.18);
+      border-color: #f43f5e;
+      color: #f43f5e;
+    }
+    .subtext { font-size: 10px; opacity: 0.75; font-weight: normal; }
+
+    /* Viewer Container */
+    .viewer-container {
+      flex: 1;
+      position: relative;
+      height: 100vh;
+      overflow: hidden;
+    }
+    #canvas-3d {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    /* Top Navigation Control Bar */
+    .nav-bar {
+      position: absolute;
+      top: 16px;
+      left: 20px;
+      z-index: 30;
+      display: flex;
+      gap: 8px;
+      background: rgba(15, 23, 42, 0.90);
+      backdrop-filter: blur(10px);
+      padding: 6px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    }
+    .nav-btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: var(--text-dim);
+      padding: 6px 12px;
+      border-radius: 5px;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .nav-btn:hover { background: rgba(255, 255, 255, 0.12); color: var(--text); }
+    .nav-btn.active { background: var(--accent); color: #060911; border-color: var(--accent); }
+
+    /* Interactive Explosion Control Floating Card */
+    #explosion-panel {
+      position: absolute;
+      top: 16px;
+      right: 20px;
+      width: 360px;
+      background: rgba(15, 23, 42, 0.94);
+      backdrop-filter: blur(12px);
+      border: 1px solid #f43f5e;
+      border-radius: 10px;
+      padding: 16px 20px;
+      z-index: 30;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+      display: none;
+    }
+    #explosion-panel.visible { display: block; }
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      padding-bottom: 8px;
+    }
+    .panel-title { font-size: 13px; font-weight: 800; color: #f43f5e; display: flex; align-items: center; gap: 6px; }
+    .panel-badge { font-size: 11px; font-family: monospace; font-weight: 700; color: #38bdf8; }
+    .slider-row {
+      margin: 12px 0;
+    }
+    .slider-row label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      color: var(--text-dim);
+      margin-bottom: 6px;
+    }
+    .slider-row input[type=range] {
+      width: 100%;
+      height: 6px;
+      border-radius: 3px;
+      background: #334155;
+      outline: none;
+      -webkit-appearance: none;
+      cursor: pointer;
+    }
+    .slider-row input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #f43f5e;
+      cursor: pointer;
+      border: 2px solid white;
+      box-shadow: 0 0 10px rgba(244, 63, 94, 0.8);
+    }
+    .preset-btns {
+      display: flex;
+      gap: 6px;
+      margin-top: 10px;
+    }
+    .preset-btn {
+      flex: 1;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 6px 4px;
+      font-size: 10.5px;
+      font-weight: 700;
+      border-radius: 4px;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.15s;
+    }
+    .preset-btn:hover { background: #f43f5e; border-color: #f43f5e; }
+    .preset-btn.anim-active { background: #059669; border-color: #059669; }
+
+    /* Specification HUD */
+    .hud {
+      position: absolute;
+      bottom: 24px;
+      right: 20px;
+      background: var(--card);
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px 18px;
+      font-size: 11.5px;
+      width: 320px;
+      pointer-events: none;
+      z-index: 25;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+    }
+    .hud h4 {
+      margin: 0 0 8px 0;
+      color: var(--accent);
+      font-size: 12.5px;
+      font-weight: 800;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      padding-bottom: 4px;
+    }
+    .hud-row { display: flex; justify-content: space-between; margin-bottom: 4px; color: var(--text-dim); }
+    .hud-val { color: var(--text); font-weight: 700; font-family: monospace; }
+
+    /* Instructions pill */
+    .instructions {
+      position: absolute;
+      bottom: 24px;
+      left: 20px;
+      background: var(--card);
+      backdrop-filter: blur(8px);
+      border: 1px solid var(--border);
+      color: var(--text-dim);
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 11px;
+      pointer-events: none;
+      z-index: 25;
+      display: flex;
+      gap: 16px;
+    }
+    .instructions span { color: #f8fafc; font-weight: 700; }
+
+    /* Loading overlay */
+    #loading {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: var(--card);
+      border: 1px solid var(--accent);
+      padding: 16px 28px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--accent);
+      z-index: 100;
+      display: none;
+    }
+  </style>
+  <!-- Three.js + GLTFLoader + OrbitControls -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+</head>
+<body>
+  <div id="loading">Loading 3D CAD Geometry...</div>
+
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="sidebar-header">
+      <div class="brand-name">PAL ENGINEERS</div>
+      <div class="brand-sub">Heat Transfer Equipment Specialists • Est. 1985<br>Certified 3D Model: AM18SFD0AA (Plan P4429)</div>
+    </div>
+
+    <div class="section-label">Master Assemblies & Primary Scope</div>
+    <div class="part-list">
+      <button class="part-btn active bundle" id="btn-bundle" onclick="loadMode('bundle')">
+        <span>🔥 REPLACEMENT TUBE BUNDLE</span>
+        <span class="subtext">Option A Primary Scope • 28 Baffles + 354 Tubes</span>
+      </button>
+
+      <button class="part-btn" id="btn-cutaway" onclick="loadMode('cutaway')">
+        <span>🌟 MASTER CUTAWAY MODEL</span>
+        <span class="subtext">120° Shell Window • Full Internal Core Visible</span>
+      </button>
+
+      <button class="part-btn" id="btn-exploded" onclick="loadMode('exploded')">
+        <span>💥 EXPLODED 3D ASSEMBLY</span>
+        <span class="subtext">User-Adjustable Separation Slider (0% - 100%)</span>
+      </button>
+
+      <button class="part-btn" id="btn-full" onclick="loadMode('full')">
+        <span>⚙️ COMPLETE FULL ASSEMBLY</span>
+        <span class="subtext">Option B Solid Enclosure • Channel & Return Headers</span>
+      </button>
+    </div>
+
+    <div class="section-label">Engineering Drawing Sheets</div>
+    <div class="part-list">
+      <a href="bundle_cad_sheet.html" class="part-btn" style="text-decoration:none;" target="_blank">
+        <span>📄 Tube Bundle A4 Sheet</span>
+        <span class="subtext">Dedicated Option A Drawing & Title Block &rarr;</span>
+      </a>
+      <a href="complete_unit_cad_sheet.html" class="part-btn" style="text-decoration:none;" target="_blank">
+        <span>📄 Complete Exchanger A4 Sheet</span>
+        <span class="subtext">Dedicated Option B Drawing & Title Block &rarr;</span>
+      </a>
+    </div>
+
+    <div class="section-label">Individual Core Components</div>
+    <div class="part-list">
+      <button class="part-btn" id="btn-tubes" onclick="loadMode('tubes')">
+        <span>10. Copper Tubes (354 Tubes)</span>
+        <span class="subtext">Ø8.0 x 0.5 mm x 1984 mm • 17.65 m² Area</span>
+      </button>
+      <button class="part-btn" id="btn-baffles" onclick="loadMode('baffles')">
+        <span>9. Baffle Stack (Chicanage Serré)</span>
+        <span class="subtext">28 Naval Brass Baffles @ 64.52 mm Pitch</span>
+      </button>
+      <button class="part-btn" id="btn-ts_stat" onclick="loadMode('ts_stat')">
+        <span>4. Stationary Front Tubesheet</span>
+        <span class="subtext">Bronze Ø230 x 16 mm • Jig-Drilled & Reamed</span>
+      </button>
+      <button class="part-btn" id="btn-ts_float" onclick="loadMode('ts_float')">
+        <span>5. Floating Rear Tubesheet</span>
+        <span class="subtext">Bronze Ø214 x 20 mm • Dual Viton O-Rings</span>
+      </button>
+    </div>
+
+    <div class="section-label">Casting & Enclosure Components</div>
+    <div class="part-list">
+      <button class="part-btn" id="btn-shell" onclick="loadMode('shell')">
+        <span>1. Main Shell Cast Body</span>
+        <span class="subtext">Ø226.5 mm • B=1842 mm • C=1582 mm</span>
+      </button>
+      <button class="part-btn" id="btn-header_p1066" onclick="loadMode('header_p1066')">
+        <span>2. 2-Pass Channel Header (P1066)</span>
+        <span class="subtext">Dual DN 65 Flanges @ 133 mm C-to-C</span>
+      </button>
+      <button class="part-btn" id="btn-header_p1067" onclick="loadMode('header_p1067')">
+        <span>3. Return Dished Header (P1067)</span>
+        <span class="subtext">65 mm Dome Depth • Detail D Drain Boss</span>
+      </button>
+      <button class="part-btn" id="btn-saddles" onclick="loadMode('saddles')">
+        <span>8. Mounting Saddle Feet</span>
+        <span class="subtext">4x M10 Tapped Holes • C=1582 mm Spacing</span>
+      </button>
+      <button class="part-btn" id="btn-flanges" onclick="loadMode('flanges')">
+        <span>6. Counter-Flanges (Details F & G)</span>
+        <span class="subtext">Triangular 3-Bolt PCD Ø106 mm</span>
+      </button>
+      <button class="part-btn" id="btn-plug" onclick="loadMode('plug')">
+        <span>7. Drain / Purge Plug (Detail D)</span>
+        <span class="subtext">M18x1.5 Hex Socket with Copper Gasket</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Viewer Canvas -->
+  <div class="viewer-container">
+    <div class="nav-bar">
+      <button class="nav-btn" onclick="setPreset('iso')">ISO</button>
+      <button class="nav-btn" onclick="setPreset('top')">TOP</button>
+      <button class="nav-btn" onclick="setPreset('front')">FRONT</button>
+      <button class="nav-btn" onclick="setPreset('end')">END</button>
+      <button class="nav-btn" id="btn-auto-rotate" onclick="toggleAutoRotate()">⟳ ROTATE</button>
+      <button class="nav-btn" onclick="resetFit()">⛶ FIT</button>
+    </div>
+
+    <!-- Explosion Control Floating Panel -->
+    <div id="explosion-panel">
+      <div class="panel-header">
+        <div class="panel-title">💥 EXPLOSION SEPARATION</div>
+        <div class="panel-badge" id="explode-pct-badge">50%</div>
+      </div>
+      <div class="slider-row">
+        <label>
+          <span>Assembly Separation Distance</span>
+          <span id="explode-dist-label">±0.45 m</span>
+        </label>
+        <input type="range" id="explode-slider" min="0" max="100" value="50" oninput="onExplodeSlider(this.value)">
+      </div>
+      <div class="preset-btns">
+        <button class="preset-btn" onclick="setExplosionPreset(0)">0% Collapsed</button>
+        <button class="preset-btn" onclick="setExplosionPreset(50)">50% Half</button>
+        <button class="preset-btn" onclick="setExplosionPreset(100)">100% Full</button>
+        <button class="preset-btn" id="btn-explode-anim" onclick="toggleExplodeAnimation()">⟳ Auto-Animate</button>
+      </div>
+    </div>
+
+    <canvas id="canvas-3d"></canvas>
+
+    <!-- Specification HUD -->
+    <div class="hud" id="hud">
+      <h4 id="hud-title">🔥 Replacement Tube Bundle (Option A)</h4>
+      <div class="hud-row"><span>Total Length (A):</span><span class="hud-val" id="hud-len">2040.0 mm</span></div>
+      <div class="hud-row"><span>Exchange Area:</span><span class="hud-val" id="hud-area">17.65 m²</span></div>
+      <div class="hud-row"><span>Tube Count:</span><span class="hud-val" id="hud-tubes">354 Copper Tubes</span></div>
+      <div class="hud-row"><span>Baffle Stack:</span><span class="hud-val" id="hud-baffles">28 Baffles (65.26 mm)</span></div>
+      <div class="hud-row"><span>Metallurgy:</span><span class="hud-val" id="hud-mat">Copper / Brass / Bronze</span></div>
+    </div>
+
+    <!-- Instructions Pill -->
+    <div class="instructions">
+      <div><span>Left Click + Drag:</span> Orbit 360°</div>
+      <div><span>Right Click + Drag:</span> Pan Model</div>
+      <div><span>Scroll Wheel:</span> Zoom In / Out</div>
+    </div>
+  </div>
+
+  <script>
+    // Authentic Engineering PBR Materials (High-Fidelity Metallic Luster & Realistic Depth)
+    const MAT_COPPER = new THREE.MeshStandardMaterial({
+      color: 0xdf6d43, metalness: 0.88, roughness: 0.18, name: 'Pure_Copper'
+    });
+    const MAT_BRASS = new THREE.MeshStandardMaterial({
+      color: 0xdfb435, metalness: 0.85, roughness: 0.22, name: 'Naval_Brass'
+    });
+    const MAT_BRONZE = new THREE.MeshStandardMaterial({
+      color: 0xc87d32, metalness: 0.82, roughness: 0.26, name: 'Phosphor_Bronze'
+    });
+    const MAT_SHELL = new THREE.MeshStandardMaterial({
+      color: 0x76889b, metalness: 0.48, roughness: 0.38, name: 'Cast_Aluminum_RAL7011'
+    });
+    const MAT_CAST_IRON = new THREE.MeshStandardMaterial({
+      color: 0x363d47, metalness: 0.55, roughness: 0.46, name: 'Cast_Iron_Headers'
+    });
+    const MAT_STEEL = new THREE.MeshStandardMaterial({
+      color: 0xa0acb8, metalness: 0.82, roughness: 0.25, name: 'Machined_Steel'
+    });
+
+    // Three.js Scene Setup
+    const canvas = document.getElementById('canvas-3d');
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x090d16);
+
+    const camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 0.05, 50);
+    camera.position.set(2.4, 1.3, 2.6);
+
+    const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true, preserveDrawingBuffer: true });
+    renderer.setSize(canvas.clientWidth, canvas.clientHeight);
+    renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.2;
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+    const controls = new THREE.OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.06;
+    controls.target.set(0, 0, 0);
+
+    // Balanced Studio Lighting (Natural metallic specular reflections without overexposure)
+    const ambLight = new THREE.AmbientLight(0xffffff, 0.85);
+    scene.add(ambLight);
+
+    const keyLight = new THREE.DirectionalLight(0xfff7ed, 1.6);
+    keyLight.position.set(5.0, 7.5, 6.0);
+    scene.add(keyLight);
+
+    const fillLight = new THREE.DirectionalLight(0xe0f2fe, 0.9);
+    fillLight.position.set(-5.0, 3.5, -4.0);
+    scene.add(fillLight);
+
+    const topLight = new THREE.DirectionalLight(0xffeedd, 0.6);
+    topLight.position.set(0, 5.0, 0);
+    scene.add(topLight);
+
+    // Root Group
+    const rootGroup = new THREE.Group();
+    scene.add(rootGroup);
+
+    // Multi-Part Exploded Assembly Groups (Zero Duplicate Saddles)
+    const explodeGroups = {
+      shell: new THREE.Group(),
+      headerL: new THREE.Group(), // Return Header P1067
+      headerR: new THREE.Group(), // Channel Header P1066
+      tsStat: new THREE.Group(),  // Stationary Tubesheet
+      tsFloat: new THREE.Group(), // Floating Tubesheet
+      baffles: new THREE.Group(), // 28 Baffles + Tie Rods
+      tubes: new THREE.Group(),   // 354 Copper Tubes
+      flanges: new THREE.Group(), // Counter-Flanges
+      plug: new THREE.Group()     // Drain Plug
+    };
+    const explodeRoot = new THREE.Group();
+    Object.values(explodeGroups).forEach(g => explodeRoot.add(g));
+
+    const gltfLoader = new THREE.GLTFLoader();
+    let currentMode = 'bundle';
+    let autoRotate = false;
+    let explodeAnim = false;
+    let explodeFactor = 0.5;
+    let explodeDirection = 1;
+
+    // Model metadata
+    const META = {
+      bundle: {
+        file: 'models/AM18SFD0AA_Tube_Bundle.glb',
+        title: '🔥 Replacement Tube Bundle (Option A)',
+        len: '2040.0 mm Overall (L_eff=1984 mm)',
+        area: '17.65 m² (354 Tubes)',
+        tubes: '354 Pure Copper Tubes',
+        baffles: '28 Baffles (65.26 mm Pitch)',
+        mat: 'Pure Copper, Brass, Phosphor Bronze'
+      },
+      cutaway: {
+        file: 'models/AM18SFD0AA_Cutaway_Assembly.glb',
+        title: '🌟 Master Cutaway Inspection Model',
+        len: '2189.5 mm Total Length (A)',
+        area: '17.65 m² Area (240 kW)',
+        tubes: '354 Copper Tubes Visible',
+        baffles: '28 Baffles (Full Nozzle Span)',
+        mat: 'Cutaway Shell + Internal Core'
+      },
+      full: {
+        file: 'models/AM18SFD0AA_Full_Assembly.glb',
+        title: '⚙️ Complete Heat Exchanger Unit (Option B)',
+        len: '2189.5 mm Overall (A=2189.5)',
+        area: '17.65 m² Area (240 kW)',
+        tubes: '354 Tubes in Cast Shell',
+        baffles: '28 Baffles with 4 Tie Rods',
+        mat: 'Cast Aluminum + Cast Iron + Bronze'
+      },
+      tubes: {
+        file: 'models/10_Copper_Tubes_354.glb',
+        title: '10. Pure Copper Tube Bundle Core',
+        len: '2000.0 mm (L_eff=1984 mm)',
+        area: '17.65 m² Heat Transfer Area',
+        tubes: '354 Seamless Copper Tubes',
+        baffles: 'N/A (Tubes Only)',
+        mat: 'ASTM B111 C12200 Pure Copper'
+      },
+      baffles: {
+        file: 'models/9_Baffles_Serre.glb',
+        title: '9. Segmental Baffle Stack (Chicanage Serré)',
+        len: 'Span: 1842.0 mm (Nozzle to Nozzle)',
+        area: 'Full Shell Cross-Flow Routing',
+        tubes: '354 Clearance Holes / Plate',
+        baffles: '28 Plates @ 64.52 mm Uniform Pitch',
+        mat: 'Naval Brass CuZn37 + 4 Full-Length Tie Rods'
+      },
+      ts_stat: {
+        file: 'models/4_Tubesheet_Stationary.glb',
+        title: '4. Stationary Front Tubesheet',
+        len: '16.0 mm Thickness',
+        area: 'Pass Partition Sealing Land',
+        tubes: '354 Precision Jig-Drilled Holes',
+        baffles: 'N/A (Tubesheet Only)',
+        mat: 'CuSn Phosphor Bronze'
+      },
+      ts_float: {
+        file: 'models/5_Tubesheet_Floating.glb',
+        title: '5. Floating Rear Tubesheet',
+        len: '20.0 mm Thickness',
+        area: 'Thermal Expansion Slip Fit',
+        tubes: '354 Precision Jig-Drilled Holes',
+        baffles: 'N/A (Tubesheet Only)',
+        mat: 'CuSn Phosphor Bronze (Dual O-Rings)'
+      },
+      shell: {
+        file: 'models/1_Shell_Cast.glb',
+        title: '1. Main Shell Cast Body',
+        len: 'L = 2005.0 mm (B=1842 mm, C=1582 mm)',
+        area: '37.2 L Shell Fluid Capacity',
+        tubes: 'Encloses 354 Tubes Core',
+        baffles: 'Full Internal Baffle Containment',
+        mat: 'Cast Aluminum Al-Alloy (RAL 7011)'
+      },
+      header_p1066: {
+        file: 'models/2_Header_2Pass_P1066.glb',
+        title: '2. 2-Pass Channel Header (OEM Part P1066)',
+        len: '110.5 mm Depth (Right Front +X)',
+        area: 'Two-Pass Water Flow Division',
+        tubes: 'Feeds 177 + 177 Tubes/Pass',
+        baffles: 'N/A (Channel Header)',
+        mat: 'Cast Iron (Fonte GL)'
+      },
+      header_p1067: {
+        file: 'models/3_Header_Return_P1067.glb',
+        title: '3. Return Dished Header Cover (OEM Part P1067)',
+        len: '65.0 mm Spherical Concave Depth',
+        area: '180° Water Return Turnaround',
+        tubes: 'Pass 1 to Pass 2 Fluid Return',
+        baffles: 'N/A (Return Header Cover)',
+        mat: 'Cast Iron (Detail D Drain Boss)'
+      },
+      saddles: {
+        file: 'models/8_Mounting_Saddles.glb',
+        title: '8. Mounting Saddle Support Feet',
+        len: 'C = 1582.0 mm Center Distance',
+        area: '88 mm Transverse Bolt Centers',
+        tubes: 'N/A (Structural Supports)',
+        baffles: 'N/A',
+        mat: 'Cast Aluminum Alloy'
+      },
+      flanges: {
+        file: 'models/6_Counter_Flanges_Detail_F_G.glb',
+        title: '6. Counter-Flanges (Details F & G)',
+        len: '19.0 mm Thickness',
+        area: 'DN 65 (2-1/2") Flow Rating',
+        tubes: 'N/A (Connecting Flanges)',
+        baffles: 'N/A',
+        mat: 'Machined Carbon Steel'
+      },
+      plug: {
+        file: 'models/7_Drain_Plug_M18_Detail_D.glb',
+        title: '7. Drain / Purge Plug (Detail D)',
+        len: '15.0 mm Total Length',
+        area: 'M18 x 1.5 Threaded Boss Port',
+        tubes: 'N/A (Drain Hardware)',
+        baffles: 'N/A',
+        mat: 'Machined Brass Hex + Copper Washer'
+      }
+    };
+
+    function showLoading(show) {
+      document.getElementById('loading').style.display = show ? 'block' : 'none';
+    }
+
+    function clearScene() {
+      while(rootGroup.children.length > 0){
+        rootGroup.remove(rootGroup.children[0]);
+      }
+    }
+
+    // Camera Auto-Centering and Framing (Centers any isolated part at origin)
+    function fitCameraToObject(obj, isSinglePart = false) {
+      const box = new THREE.Box3().setFromObject(obj);
+      const center = new THREE.Vector3();
+      box.getCenter(center);
+      const size = new THREE.Vector3();
+      box.getSize(size);
+
+      if (isSinglePart) {
+        obj.position.sub(center);
+        controls.target.set(0, 0, 0);
+      } else {
+        controls.target.copy(center);
+      }
+
+      const maxDim = Math.max(size.x, size.y, size.z);
+      const fov = camera.fov * (Math.PI / 180);
+      let cameraZ = Math.abs(maxDim / 2 / Math.tan(fov / 2)) * 1.45;
+      cameraZ = Math.max(cameraZ, 0.45);
+
+      if (isSinglePart) {
+        camera.position.set(cameraZ * 0.85, cameraZ * 0.55, cameraZ * 0.95);
+      } else {
+        camera.position.set(center.x + cameraZ * 0.80, center.y + cameraZ * 0.50, center.z + cameraZ * 0.90);
+      }
+      camera.lookAt(controls.target);
+      controls.update();
+    }
+
+    // Apply vivid, contrasting materials while preserving native PBR metallics
+    function applyVividMaterials(object, mode) {
+      object.traverse(child => {
+        if (child.isMesh) {
+          if (child.geometry) {
+            child.geometry.computeVertexNormals();
+          }
+          child.castShadow = true;
+          child.receiveShadow = true;
+          
+          // Preserve valid embedded PBR material directly from GLB
+          if (child.material && child.material.name && child.material.name !== 'default' && child.material.name !== '') {
+            child.material.side = THREE.DoubleSide;
+            return;
+          }
+          
+          const matName = (child.material && child.material.name ? child.material.name.toLowerCase() : '');
+          const parentName = child.parent ? (child.parent.name || '') : '';
+          const name = ((child.name || '') + ' ' + parentName).toLowerCase();
+          
+          if (matName.includes('copper') || name.includes('tube') || mode === 'tubes') {
+            child.material = MAT_COPPER.clone();
+          } else if (matName.includes('brass') || name.includes('baffle') || name.includes('rod') || mode === 'baffles') {
+            child.material = MAT_BRASS.clone();
+          } else if (matName.includes('bronze') || name.includes('tubesheet') || name.includes('sheet') || mode === 'ts_stat' || mode === 'ts_float') {
+            child.material = MAT_BRONZE.clone();
+          } else if (matName.includes('alum') || name.includes('shell') || name.includes('saddle') || mode === 'shell' || mode === 'saddles') {
+            child.material = MAT_SHELL.clone();
+          } else if (matName.includes('iron') || name.includes('header') || name.includes('p1066') || name.includes('p1067') || mode === 'header_p1066' || mode === 'header_p1067') {
+            child.material = MAT_CAST_IRON.clone();
+          } else if (matName.includes('steel') || name.includes('flange') || mode === 'flanges') {
+            child.material = MAT_STEEL.clone();
+          } else if (matName.includes('plug') || name.includes('plug') || mode === 'plug') {
+            child.material = MAT_BRASS.clone();
+          }
+          
+          if (child.material) {
+            child.material.side = THREE.DoubleSide;
+          }
+        }
+      });
+    }
+
+    // Load Single Model with Automatic Framing
+    function loadSingleGLB(path, mode, callback) {
+      showLoading(true);
+      gltfLoader.load(path, gltf => {
+        applyVividMaterials(gltf.scene, mode);
+        rootGroup.add(gltf.scene);
+        const isSingle = !['bundle', 'cutaway', 'full', 'exploded'].includes(mode);
+        fitCameraToObject(gltf.scene, isSingle);
+        showLoading(false);
+        if (callback) callback(gltf.scene);
+      });
+    }
+
+    // Load Interactive Exploded Assembly (Zero Duplicate Geometries)
+    let explodedLoaded = false;
+    function loadExplodedMode() {
+      showLoading(true);
+      clearScene();
+      rootGroup.add(explodeRoot);
+      document.getElementById('explosion-panel').classList.add('visible');
+
+      if (explodedLoaded) {
+        showLoading(false);
+        updateExplosionPositions(explodeFactor);
+        fitCameraToObject(explodeRoot, false);
+        return;
+      }
+
+      // Load all distinct non-duplicate component GLBs into individual groups
+      const loadTasks = [
+        { file: 'models/1_Shell_Cast.glb', group: explodeGroups.shell, mat: MAT_SHELL },
+        { file: 'models/2_Header_2Pass_P1066.glb', group: explodeGroups.headerR, mat: MAT_CAST_IRON },
+        { file: 'models/3_Header_Return_P1067.glb', group: explodeGroups.headerL, mat: MAT_CAST_IRON },
+        { file: 'models/4_Tubesheet_Stationary.glb', group: explodeGroups.tsStat, mat: MAT_BRONZE },
+        { file: 'models/5_Tubesheet_Floating.glb', group: explodeGroups.tsFloat, mat: MAT_BRONZE },
+        { file: 'models/9_Baffles_Serre.glb', group: explodeGroups.baffles, mat: MAT_BRASS },
+        { file: 'models/10_Copper_Tubes_354.glb', group: explodeGroups.tubes, mat: MAT_COPPER },
+        { file: 'models/6_Counter_Flanges_Detail_F_G.glb', group: explodeGroups.flanges, mat: MAT_STEEL },
+        { file: 'models/7_Drain_Plug_M18_Detail_D.glb', group: explodeGroups.plug, mat: MAT_BRASS }
+      ];
+
+      let completed = 0;
+      loadTasks.forEach(task => {
+        gltfLoader.load(task.file, gltf => {
+          gltf.scene.traverse(ch => {
+            if (ch.isMesh) {
+              if (ch.geometry) {
+                ch.geometry.computeVertexNormals();
+              }
+              if (ch.material && ch.material.name && ch.material.name !== 'default' && ch.material.name !== '') {
+                ch.material.side = THREE.DoubleSide;
+              } else {
+                ch.material = task.mat.clone();
+                ch.material.side = THREE.DoubleSide;
+              }
+              ch.castShadow = true;
+              ch.receiveShadow = true;
+            }
+          });
+          task.group.add(gltf.scene);
+          completed++;
+          if (completed === loadTasks.length) {
+            explodedLoaded = true;
+            showLoading(false);
+            updateExplosionPositions(explodeFactor);
+            fitCameraToObject(explodeRoot, false);
+          }
+        });
+      });
+    }
+
+    // Dynamic Real-Time Explosion Position Calculations
+    function updateExplosionPositions(factor) {
+      explodeFactor = factor;
+      document.getElementById('explode-pct-badge').innerText = Math.round(factor * 100) + '%';
+      document.getElementById('explode-slider').value = Math.round(factor * 100);
+      document.getElementById('explode-dist-label').innerText = '±' + (factor * 0.90).toFixed(2) + ' m';
+
+      // Symmetrical & lateral component offsets based on factor (0.0 to 1.0)
+      explodeGroups.headerR.position.x = factor * 0.70;   // Channel Header moves right
+      explodeGroups.flanges.position.x = factor * 0.95;   // Front flanges move furthest right
+      explodeGroups.tsStat.position.x = factor * 0.35;    // Stationary tubesheet separates right
+      
+      explodeGroups.headerL.position.x = -factor * 0.70;  // Return Header moves left
+      explodeGroups.plug.position.x = -factor * 0.95;     // Drain plug moves furthest left
+      explodeGroups.tsFloat.position.x = -factor * 0.35;   // Floating tubesheet separates left
+
+      // Shell lifts upward and back so internal bundle is 100% visible (saddles are integral to shell)
+      explodeGroups.shell.position.y = factor * 0.35;
+      explodeGroups.shell.position.z = -factor * 0.20;
+
+      // Bundle stays centered as reference baseline
+      explodeGroups.tubes.position.set(0, 0, 0);
+      explodeGroups.baffles.position.set(0, 0, 0);
+    }
+
+    window.onExplodeSlider = function(val) {
+      explodeAnim = false;
+      document.getElementById('btn-explode-anim').classList.remove('anim-active');
+      updateExplosionPositions(val / 100.0);
+    };
+
+    window.setExplosionPreset = function(pct) {
+      explodeAnim = false;
+      document.getElementById('btn-explode-anim').classList.remove('anim-active');
+      updateExplosionPositions(pct / 100.0);
+    };
+
+    window.toggleExplodeAnimation = function() {
+      explodeAnim = !explodeAnim;
+      const btn = document.getElementById('btn-explode-anim');
+      if (explodeAnim) {
+        btn.classList.add('anim-active');
+        btn.innerText = '⏸ Pause Anim';
+      } else {
+        btn.classList.remove('anim-active');
+        btn.innerText = '⟳ Auto-Animate';
+      }
+    };
+
+    // Mode Switcher
+    window.loadMode = function(mode) {
+      currentMode = mode;
+      explodeAnim = false;
+      document.getElementById('btn-explode-anim').classList.remove('anim-active');
+
+      // Update sidebar active buttons
+      document.querySelectorAll('.part-btn').forEach(b => {
+        b.classList.remove('active', 'bundle', 'explode');
+      });
+      const activeBtn = document.getElementById('btn-' + mode);
+      if (activeBtn) {
+        activeBtn.classList.add('active');
+        if (mode === 'bundle') activeBtn.classList.add('bundle');
+        if (mode === 'exploded') activeBtn.classList.add('explode');
+      }
+
+      // Update HUD
+      const meta = META[mode];
+      if (meta) {
+        document.getElementById('hud-title').innerText = meta.title;
+        document.getElementById('hud-len').innerText = meta.len;
+        document.getElementById('hud-area').innerText = meta.area;
+        document.getElementById('hud-tubes').innerText = meta.tubes;
+        document.getElementById('hud-baffles').innerText = meta.baffles;
+        document.getElementById('hud-mat').innerText = meta.mat;
+      }
+
+      if (mode === 'exploded') {
+        loadExplodedMode();
+      } else {
+        document.getElementById('explosion-panel').classList.remove('visible');
+        clearScene();
+        if (meta && meta.file) {
+          loadSingleGLB(meta.file, mode);
+        }
+      }
+    };
+
+    // Camera Navigation Presets
+    window.setPreset = function(preset) {
+      if (preset === 'iso') {
+        camera.position.set(2.4, 1.3, 2.6);
+        controls.target.set(0, 0, 0);
+      } else if (preset === 'top') {
+        camera.position.set(0, 3.8, 0.01);
+        controls.target.set(0, 0, 0);
+      } else if (preset === 'front') {
+        camera.position.set(0, 0, 3.6);
+        controls.target.set(0, 0, 0);
+      } else if (preset === 'end') {
+        camera.position.set(3.6, 0, 0);
+        controls.target.set(0, 0, 0);
+      }
+      controls.update();
+    };
+
+    window.toggleAutoRotate = function() {
+      autoRotate = !autoRotate;
+      controls.autoRotate = autoRotate;
+      controls.autoRotateSpeed = 2.0;
+      const btn = document.getElementById('btn-auto-rotate');
+      if (autoRotate) {
+        btn.classList.add('active');
+      } else {
+        btn.classList.remove('active');
+      }
+    };
+
+    window.resetFit = function() {
+      setPreset('iso');
+    };
+
+    // Render Loop with Auto-Animation
+    function animate() {
+      requestAnimationFrame(animate);
+
+      if (currentMode === 'exploded' && explodeAnim) {
+        explodeFactor += 0.005 * explodeDirection;
+        if (explodeFactor >= 1.0) {
+          explodeFactor = 1.0;
+          explodeDirection = -1;
+        } else if (explodeFactor <= 0.0) {
+          explodeFactor = 0.0;
+          explodeDirection = 1;
+        }
+        updateExplosionPositions(explodeFactor);
+      }
+
+      controls.update();
+      renderer.render(scene, camera);
+    }
+    animate();
+
+    // Responsive Resize
+    window.addEventListener('resize', () => {
+      camera.aspect = canvas.clientWidth / canvas.clientHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(canvas.clientWidth, canvas.clientHeight);
+    });
+
+    // Check URL parameters (default to 'bundle')
+    const urlParams = new URLSearchParams(window.location.search);
+    const initialMode = urlParams.get('mode') || urlParams.get('part') || 'bundle';
+    loadMode(initialMode);
+  </script>
+</body>
+</html>

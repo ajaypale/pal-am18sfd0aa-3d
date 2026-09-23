@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>COMPLETE HEAT EXCHANGER UNIT (OPTION B) - PAL ENGINEERS 3D CAD SHEET</title>
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.3.0/model-viewer.min.js"></script>
+    <style>
+        :root {
+            --navy: #0f2d59;
+            --red: #cc2027;
+            --bg-sheet: #ffffff;
+            --border: #cbd5e1;
+            --text-dark: #0f172a;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            background: #0f172a;
+            font-family: 'Segoe UI', 'Inter', -apple-system, sans-serif;
+            color: var(--text-dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        .sheet-container {
+            width: 100%;
+            max-width: 1280px;
+            aspect-ratio: 842 / 595;
+            background: var(--bg-sheet);
+            border: 2px solid var(--navy);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            display: flex;
+            flex-direction: column;
+            padding: 12px 16px;
+            position: relative;
+        }
+        /* Header */
+        .sheet-header {
+            background: var(--navy);
+            color: white;
+            padding: 8px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--red);
+        }
+        .brand-name { font-size: 18px; font-weight: 800; letter-spacing: 0.5px; }
+        .brand-sub { font-size: 9px; opacity: 0.85; margin-top: 2px; }
+        .sheet-title {
+            background: #ffffff;
+            color: var(--red);
+            padding: 6px 16px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 800;
+            text-align: center;
+            border: 1px solid var(--border);
+        }
+        .sheet-title span { display: block; font-size: 9px; color: var(--navy); font-weight: normal; margin-top: 2px; }
+        .badge-cert {
+            background: #059669;
+            color: white;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 4px;
+        }
+        /* 3D Viewport */
+        .viewport-wrapper {
+            flex: 1;
+            position: relative;
+            background: #ffffff;
+            border: 1px solid var(--border);
+            margin: 8px 0;
+            overflow: hidden;
+        }
+        model-viewer {
+            width: 100%;
+            height: 100%;
+            outline: none;
+            background-color: #ffffff;
+        }
+        /* On-Canvas Nav */
+        .cad-nav {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            z-index: 20;
+            display: flex;
+            gap: 6px;
+            background: rgba(15, 23, 42, 0.85);
+            padding: 5px;
+            border-radius: 6px;
+            backdrop-filter: blur(8px);
+        }
+        .nav-btn {
+            background: rgba(255,255,255,0.1);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.2);
+            padding: 5px 10px;
+            font-size: 10px;
+            font-weight: 700;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+        .nav-btn:hover { background: var(--red); border-color: var(--red); }
+        /* Hotspots */
+        .hotspot {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            position: relative;
+            outline: none;
+        }
+        .dot {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: #0284c7;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: 800;
+            border: 2px solid white;
+            box-shadow: 0 0 10px rgba(56,189,248,0.8);
+            transition: transform 0.2s;
+        }
+        .dot.gold { background: #f59e0b; box-shadow: 0 0 10px rgba(245,158,11,0.9); }
+        .dot.copper { background: #ea580c; box-shadow: 0 0 10px rgba(234,88,12,0.9); }
+        .hotspot:hover .dot { transform: scale(1.3); }
+        .annotation {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(15, 23, 42, 0.95);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 10px;
+            line-height: 1.3;
+            width: 200px;
+            display: none;
+            border: 1px solid #38bdf8;
+            box-shadow: 0 6px 16px rgba(0,0,0,0.5);
+            pointer-events: none;
+            z-index: 50;
+        }
+        .hotspot:hover .annotation { display: block; }
+        /* Help bar */
+        .instruction-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #f1f5f9;
+            padding: 6px 12px;
+            font-size: 10px;
+            border: 1px solid var(--border);
+            margin-bottom: 8px;
+        }
+        .instruction-bar strong { color: var(--navy); }
+        /* Title block */
+        .title-block {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            border: 1px solid var(--navy);
+            font-size: 9.5px;
+            background: white;
+        }
+        .tb-col {
+            padding: 8px 12px;
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+        .tb-col:last-child { border-right: none; }
+        .tb-head {
+            font-size: 10px;
+            font-weight: 800;
+            color: var(--navy);
+            border-bottom: 1px solid #e2e8f0;
+            padding-bottom: 4px;
+            margin-bottom: 3px;
+        }
+        .tb-item { color: #334155; line-height: 1.25; }
+    </style>
+</head>
+<body>
+    <div class="sheet-container">
+        <!-- Header -->
+        <div class="sheet-header">
+            <div>
+                <div class="brand-name">PAL ENGINEERS</div>
+                <div class="brand-sub">18 Anand Ind. Estate, Mohan Nagar, Ghaziabad (U.P.) - 201007 • GSTIN: 09AOPPP6733G1ZE</div>
+            </div>
+            <div class="sheet-title">
+                COMPLETE HEAT EXCHANGER UNIT (OPTION B)
+                <span>Cast Shell (RAL 7011) • Headers P1066/P1067 • Full Internal Bundle</span>
+            </div>
+            <div>
+                <div class="badge-cert">✓ 60 FPS WEBGL CAD</div>
+            </div>
+        </div>
+
+        <!-- 3D Viewport -->
+        <div class="viewport-wrapper">
+            <div class="cad-nav">
+                <button class="nav-btn" onclick="setOrbit('45deg 75deg 3.2m')">ISO</button>
+                <button class="nav-btn" onclick="setOrbit('0deg 5deg 3.5m')">TOP</button>
+                <button class="nav-btn" onclick="setOrbit('0deg 90deg 3.5m')">FRONT</button>
+                <button class="nav-btn" onclick="setOrbit('90deg 90deg 3.5m')">END</button>
+                <button class="nav-btn" onclick="toggleRotate()">⟳ ROTATE</button>
+                <button class="nav-btn" onclick="resetFraming()">⛶ FIT</button>
+            </div>
+
+            <model-viewer id="cad-viewer"
+                          src="models/AM18SFD0AA_Full_Assembly.glb"
+                          camera-controls
+                          auto-rotate
+                          shadow-intensity="1.5"
+                          exposure="1.2"
+                          camera-orbit="45deg 75deg 3.2m"
+                          bounds="tight"
+                          environment-image="neutral">
+                
+        <button class="hotspot" slot="hotspot-shell" data-position="0m 0.115m 0m" data-normal="0m 1m 0m">
+            <div class="dot">1</div>
+            <div class="annotation">
+                <strong>Main Shell Body (Calandre)</strong><br>
+                Cast Aluminum RAL 7011, Ø226.5 mm OD.<br>
+                Service pressure 16.0 bar (Hydrotest 24.0 bar).
+            </div>
+        </button>
+        <button class="hotspot" slot="hotspot-noz1" data-position="-0.921m 0.155m 0m" data-normal="0m 1m 0m">
+            <div class="dot gold">F1</div>
+            <div class="annotation">
+                <strong>Shell Hot Fluid Port (Detail F)</strong><br>
+                DN 65 Triangular 3-bolt flange (PCD Ø106 mm).<br>
+                Center-to-center spacing B = 1842.0 mm.
+            </div>
+        </button>
+        <button class="hotspot" slot="hotspot-header" data-position="1.08m 0.02m 0m" data-normal="1m 0m 0m">
+            <div class="dot">2</div>
+            <div class="annotation">
+                <strong>2-Pass Channel Header (P1066)</strong><br>
+                Cast Iron header with internal horizontal pass divider.<br>
+                Dual Detail G cooling water ports @ ±66.5 mm.
+            </div>
+        </button>
+        <button class="hotspot" slot="hotspot-return" data-position="-1.04m 0.02m 0m" data-normal="-1m 0m 0m">
+            <div class="dot">3</div>
+            <div class="annotation">
+                <strong>Return Dished Header (P1067)</strong><br>
+                Cast Iron with 65 mm deep spherical dish & Detail D drain.
+            </div>
+        </button>
+    
+            </model-viewer>
+        </div>
+
+        <!-- Instructions -->
+        <div class="instruction-bar">
+            <div>
+                <strong>3D Controls:</strong> Left Click + Drag: Orbit 360° • Scroll Wheel: Zoom • Right Click: Pan • Hover Pins: Part Specs
+            </div>
+            <div>
+                <a href="index.html" style="color: var(--red); font-weight: 800; text-decoration: none;">Launch Full CAD Suite &rarr;</a>
+            </div>
+        </div>
+
+        <!-- Title Block -->
+        <div class="title-block">
+            
+        <div class="tb-col">
+            <div class="tb-head">1. COMPLETE UNIT SPECIFICATIONS</div>
+            <div class="tb-item">• <strong>Equipment:</strong> Model AM18SFD0AA Complete Heat Exchanger</div>
+            <div class="tb-item">• <strong>Envelope:</strong> Total Length A=2189.5 mm • Shell OD Ø226.5 mm</div>
+            <div class="tb-item">• <strong>Centers:</strong> Nozzles B=1842.0 mm • Mounting Saddles C=1582.0 mm</div>
+            <div class="tb-item">• <strong>Shell:</strong> Cast Aluminum Al-Si Alloy RAL 7011 • Vol: 37.2 L</div>
+            <div class="tb-item">• <strong>Headers:</strong> Cast Iron Fonte GL (P1066 2-Pass + P1067 Return Dome)</div>
+            <div class="tb-item" style="color:#cc2027;">• <strong>Total Mass:</strong> 130.7 kg Dry • Direct Bolt-to-Bolt Interchangeable</div>
+        </div>
+    
+
+            <div class="tb-col">
+                <div class="tb-head">2. SERVICE CONDITIONS & TESTING</div>
+                <div class="tb-item">• <strong>Shell Fluid:</strong> Oil ISO VG 220 @ 380 L/min</div>
+                <div class="tb-item">• <strong>Shell Pressures:</strong> Service 16.0 bar | Hydrotest 24.0 bar</div>
+                <div class="tb-item">• <strong>Tube Fluid:</strong> Cooling Water @ 430 L/min</div>
+                <div class="tb-item">• <strong>Tube Pressures:</strong> Service 10.0 bar | Hydrotest 15.0 bar</div>
+                <div class="tb-item">• <strong>Design Standard:</strong> OEM Plan P4429 Rev 3 / Proven Workshop Standards</div>
+                <div class="tb-item" style="color:#059669;">• <strong>Pressure Directive:</strong> PED 2014/68/EU SEP Art. 4 §3</div>
+            </div>
+
+            <div class="tb-col">
+                <div class="tb-head">3. CLIENT & CERTIFICATION TITLE BLOCK</div>
+                <div class="tb-item">• <strong>Client:</strong> M/s. SATIA INDUSTRIES LIMITED</div>
+                <div class="tb-item">• <strong>Document Scope:</strong> Complete Heat Exchanger Apparatus</div>
+                <div class="tb-item">• <strong>Equipment Make:</strong> PICKER Model AM18SFD0AA</div>
+                <div class="tb-item">• <strong>Blueprint Reference:</strong> Plan P4429 Rev 3 / Spec 6114</div>
+                <div class="tb-item">• <strong>Guarantee:</strong> 100% Dimensional Interchangeability</div>
+                <div class="tb-item" style="color:var(--red); font-weight:700;">• Certified By: PAL ENGINEERS QA & Design Dept.</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const mv = document.getElementById('cad-viewer');
+        function setOrbit(orbit) {
+            mv.cameraOrbit = orbit;
+            mv.cameraTarget = 'auto auto auto';
+        }
+        function resetFraming() {
+            mv.cameraOrbit = '45deg 75deg 3.2m';
+            mv.cameraTarget = 'auto auto auto';
+        }
+        function toggleRotate() {
+            mv.autoRotate = !mv.autoRotate;
+        }
+    </script>
+</body>
+</html>
