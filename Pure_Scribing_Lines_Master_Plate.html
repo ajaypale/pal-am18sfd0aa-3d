@@ -216,34 +216,40 @@
   <!-- EXPLANATION DETAILS CARDS -->
   <div class="details-grid">
 
-    <!-- CARD 1: THE 3 FAMILIES OF SCRIBED LINES -->
+    <!-- CARD 1: THE 4 FAMILIES OF SCRIBED LINES -->
     <div class="card">
       <div class="card-head">
-        <span>1. THE 3 FAMILIES OF SCRIBED LINES</span>
-        <span style="font-size: 11px; color: var(--gold); font-family: monospace;">TRIANGULATION MATRIX</span>
+        <span>1. THE 4 FAMILIES OF SCRIBED LINES</span>
+        <span style="font-size: 11px; color: var(--gold); font-family: monospace;">4-WAY INTERSECTION MATRIX</span>
       </div>
       <p style="font-size: 12.5px; color: var(--slate); margin-bottom: 12px;">
-        To achieve mathematically perfect 60° equilateral triangular pitch without cumulative layout error, three independent sets of straight lines are scribed across the Prussian Blue dye:
+        To achieve mathematically perfect 60° equilateral triangular pitch with zero cumulative layout error, four independent sets of straight lines are scribed across the Prussian Blue dye:
       </p>
       <table class="spec-table">
         <thead>
-          <tr><th>Line Family</th><th>Orientation</th><th>Tool Used</th><th>Spacing</th></tr>
+          <tr><th>Line Family</th><th>Orientation</th><th>Tool Used</th><th>Spacing & Count</th></tr>
         </thead>
         <tbody>
           <tr>
             <td class="param-name" style="color:#ffffff;">Family 1: Rows</td>
             <td class="param-val" style="color:#ffffff;">Horizontal (0°)</td>
-            <td>Vernier Height Gauge</td>
-            <td>ΔY = 7.838 mm steps</td>
+            <td>Height Gauge</td>
+            <td>22 Lines &bull; ΔY = 7.838 mm steps</td>
           </tr>
           <tr>
-            <td class="param-name" style="color:#38bdf8;">Family 2: Rays</td>
-            <td class="param-val" style="color:#38bdf8;">+60.0° Angle</td>
+            <td class="param-name" style="color:#38bdf8;">Family 2: Columns</td>
+            <td class="param-val" style="color:#38bdf8;">Vertical (90°)</td>
+            <td>Rotate 90° on Angle Plate</td>
+            <td>41 Lines &bull; ΔX = 4.525 mm steps</td>
+          </tr>
+          <tr>
+            <td class="param-name" style="color:#60a5fa;">Family 3: Rays</td>
+            <td class="param-val" style="color:#60a5fa;">+60.0° Angle</td>
             <td>Master Bevel Protractor</td>
             <td>ΔX = 9.05 mm horizontal pitch</td>
           </tr>
           <tr>
-            <td class="param-name" style="color:#c084fc;">Family 3: Rays</td>
+            <td class="param-name" style="color:#c084fc;">Family 4: Rays</td>
             <td class="param-val" style="color:#c084fc;">120.0° (-60°)</td>
             <td>Opposing Set-Square</td>
             <td>ΔX = 9.05 mm horizontal pitch</td>
@@ -251,7 +257,7 @@
         </tbody>
       </table>
       <div style="margin-top: 12px; padding: 10px; background: rgba(56, 189, 248, 0.1); border-left: 3px solid var(--accent); border-radius: 4px; font-size: 11.5px;">
-        <strong>The Rule of Three:</strong> Every hole center is created by the exact intersection of 1 Horizontal line + 1 (+60°) line + 1 (120°) line. If all 3 lines do not meet at a single microscopic point, the machinist immediately knows a pitch error occurred before any center punch is struck.
+        <strong>The Rule of Four:</strong> Every hole center is created by the exact intersection of 1 Horizontal row line + 1 Vertical column line + 1 (+60°) ray + 1 (120°) ray. If all 4 lines do not meet at a single microscopic crosshair (+), the machinist immediately spots the discrepancy before any punch is struck.
       </div>
     </div>
 
