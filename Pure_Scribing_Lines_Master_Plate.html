@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pure Scribing Lines Only Master Sheet | PAL ENGINEERS</title>
+<style>
+  :root {
+    --bg-dark: #070d1e;
+    --card-bg: #0f1c3f;
+    --border: #1e293b;
+    --accent: #38bdf8;
+    --gold: #f59e0b;
+    --emerald: #10b981;
+    --rose: #ef4444;
+    --slate: #94a3b8;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    background: var(--bg-dark);
+    color: #f8fafc;
+    padding: 20px;
+    line-height: 1.5;
+  }
+  .container {
+    max-width: 1650px;
+    margin: 0 auto;
+  }
+  header {
+    background: #0f172a;
+    border: 1px solid var(--border);
+    border-top: 4px solid var(--gold);
+    border-radius: 10px;
+    padding: 18px 24px;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  .header-left h1 {
+    font-size: 21px;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: -0.3px;
+  }
+  .header-left p {
+    font-size: 12.5px;
+    color: var(--slate);
+    margin-top: 4px;
+  }
+  .badge-tag {
+    background: rgba(245, 158, 11, 0.15);
+    color: var(--gold);
+    border: 1px solid var(--gold);
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 700;
+  }
+  .btn {
+    background: rgba(56, 189, 248, 0.12);
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    padding: 6px 14px;
+    border-radius: 4px;
+    font-size: 11.5px;
+    font-weight: 700;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .btn:hover {
+    background: var(--accent);
+    color: #070d1e;
+  }
+  .btn-gold {
+    background: rgba(245, 158, 11, 0.15);
+    border-color: var(--gold);
+    color: var(--gold);
+  }
+  .btn-gold:hover {
+    background: var(--gold);
+    color: #070d1e;
+  }
+
+  /* MAIN IMAGE CARD */
+  .image-card {
+    background: #0b1329;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+    margin-bottom: 24px;
+  }
+  .image-toolbar {
+    padding: 12px 20px;
+    background: #0f172a;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .image-viewport {
+    overflow: auto;
+    max-height: 850px;
+    background: #040915;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 12px;
+    cursor: grab;
+  }
+  .image-viewport:active {
+    cursor: grabbing;
+  }
+  .image-viewport img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    transition: transform 0.2s ease-out;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+  }
+
+  /* DETAILS GRID */
+  .details-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+    gap: 20px;
+  }
+  .card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px;
+  }
+  .card-head {
+    font-size: 14px;
+    font-weight: 800;
+    color: #ffffff;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    padding-bottom: 10px;
+    margin-bottom: 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .card-head span:first-child {
+    color: var(--accent);
+  }
+  .spec-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+  }
+  .spec-table th {
+    text-align: left;
+    color: var(--slate);
+    font-size: 11px;
+    padding: 6px 8px;
+    border-bottom: 1px solid var(--border);
+    text-transform: uppercase;
+  }
+  .spec-table td {
+    padding: 7px 8px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+  .spec-table tr:hover td {
+    background: rgba(255,255,255,0.03);
+  }
+  .param-name { font-weight: 600; color: #e2e8f0; }
+  .param-val { font-family: monospace; font-weight: 700; color: var(--gold); }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <header>
+    <div class="header-left">
+      <h1>PAL ENGINEERS • PURE SCRIBING LINES MASTER TEMPLATE</h1>
+      <p>Model: PICKER AM18SFD0AA | Client: M/s. SATIA INDUSTRIES LIMITED | Plan: P4429 Rev 3 (Datasheet 6114)</p>
+    </div>
+    <div style="display: flex; gap: 10px; align-items: center;">
+      <span class="badge-tag">SCRIBING LINES ONLY (ZERO TUBES)</span>
+      <a href="Pure_Scribing_Lines_Master_Plate.png" target="_blank" class="btn btn-gold">Open 4.5K PNG Directly</a>
+    </div>
+  </header>
+
+  <!-- MAIN SCRIBING PLATE CARD -->
+  <div class="image-card">
+    <div class="image-toolbar">
+      <div style="font-size: 13px; font-weight: 700; color: #ffffff;">
+        HIGH-CONTRAST PRUSSIAN BLUE SCRIBING MASTER (ALL 22 HEIGHT-GAUGE ROWS, 60°/120° RAYS & 6 TRAMMEL CIRCLES)
+      </div>
+      <div style="display: flex; gap: 8px; align-items: center;">
+        <button class="btn" onclick="zoomIn()">Zoom In (+)</button>
+        <button class="btn" onclick="zoomOut()">Zoom Out (-)</button>
+        <button class="btn" onclick="resetZoom()">Fit to Screen</button>
+        <button class="btn btn-gold" onclick="actualSize()">100% Actual Resolution</button>
+      </div>
+    </div>
+    
+    <div class="image-viewport" id="viewport">
+      <img id="main-plate" src="Pure_Scribing_Lines_Master_Plate.png" alt="Pure Scribing Lines Only Master Plate">
+    </div>
+  </div>
+
+  <!-- EXPLANATION DETAILS CARDS -->
+  <div class="details-grid">
+
+    <!-- CARD 1: THE 3 FAMILIES OF SCRIBED LINES -->
+    <div class="card">
+      <div class="card-head">
+        <span>1. THE 3 FAMILIES OF SCRIBED LINES</span>
+        <span style="font-size: 11px; color: var(--gold); font-family: monospace;">TRIANGULATION MATRIX</span>
+      </div>
+      <p style="font-size: 12.5px; color: var(--slate); margin-bottom: 12px;">
+        To achieve mathematically perfect 60° equilateral triangular pitch without cumulative layout error, three independent sets of straight lines are scribed across the Prussian Blue dye:
+      </p>
+      <table class="spec-table">
+        <thead>
+          <tr><th>Line Family</th><th>Orientation</th><th>Tool Used</th><th>Spacing</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="param-name" style="color:#ffffff;">Family 1: Rows</td>
+            <td class="param-val" style="color:#ffffff;">Horizontal (0°)</td>
+            <td>Vernier Height Gauge</td>
+            <td>ΔY = 7.838 mm steps</td>
+          </tr>
+          <tr>
+            <td class="param-name" style="color:#38bdf8;">Family 2: Rays</td>
+            <td class="param-val" style="color:#38bdf8;">+60.0° Angle</td>
+            <td>Master Bevel Protractor</td>
+            <td>ΔX = 9.05 mm horizontal pitch</td>
+          </tr>
+          <tr>
+            <td class="param-name" style="color:#c084fc;">Family 3: Rays</td>
+            <td class="param-val" style="color:#c084fc;">120.0° (-60°)</td>
+            <td>Opposing Set-Square</td>
+            <td>ΔX = 9.05 mm horizontal pitch</td>
+          </tr>
+        </tbody>
+      </table>
+      <div style="margin-top: 12px; padding: 10px; background: rgba(56, 189, 248, 0.1); border-left: 3px solid var(--accent); border-radius: 4px; font-size: 11.5px;">
+        <strong>The Rule of Three:</strong> Every hole center is created by the exact intersection of 1 Horizontal line + 1 (+60°) line + 1 (120°) line. If all 3 lines do not meet at a single microscopic point, the machinist immediately knows a pitch error occurred before any center punch is struck.
+      </div>
+    </div>
+
+    <!-- CARD 2: THE 6 CONCENTRIC CIRCLE DATUMS -->
+    <div class="card">
+      <div class="card-head">
+        <span>2. THE 6 CONCENTRIC TRAMMEL CIRCLES</span>
+        <span style="font-size: 11px; color: var(--gold); font-family: monospace;">SCRIBED FROM (0, 0)</span>
+      </div>
+      <table class="spec-table">
+        <thead>
+          <tr><th>Feature</th><th>Diameter (Ø)</th><th>Radius (R)</th><th>Function</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="param-name" style="color:#94a3b8;">Stationary Flange OD</td>
+            <td class="param-val">Ø 285.0 mm</td>
+            <td>142.50 mm</td>
+            <td>Outer physical disc edge</td>
+          </tr>
+          <tr>
+            <td class="param-name" style="color:#ef4444;">Bolt Circle (PCD)</td>
+            <td class="param-val" style="color:#ef4444;">Ø 260.0 mm</td>
+            <td>130.00 mm</td>
+            <td>12x M12 bolt centers</td>
+          </tr>
+          <tr>
+            <td class="param-name" style="color:#38bdf8;">Shell Inside Bore ID</td>
+            <td class="param-val" style="color:#38bdf8;">Ø 226.5 mm</td>
+            <td>113.25 mm</td>
+            <td>Internal aluminium shell bore</td>
+          </tr>
+          <tr>
+            <td class="param-name" style="color:#f59e0b;">Floating Tubesheet OD</td>
+            <td class="param-val" style="color:#f59e0b;">Ø 214.0 mm</td>
+            <td>107.00 mm</td>
+            <td>Rear head outer diameter</td>
+          </tr>
+          <tr>
+            <td class="param-name" style="color:#d97706;">O-Ring Groove Root</td>
+            <td class="param-val" style="color:#d97706;">Ø 207.0 mm</td>
+            <td>103.50 mm</td>
+            <td>Root of dual Viton grooves</td>
+          </tr>
+          <tr>
+            <td class="param-name" style="color:#10b981;">Outer Tube Limit (OTL)</td>
+            <td class="param-val" style="color:#10b981;">Ø 191.83 mm</td>
+            <td>95.92 mm</td>
+            <td><strong>HARD STOP: Zero holes past this</strong></td>
+          </tr>
+        </tbody>
+      </table>
+      <div style="margin-top: 12px; padding: 10px; background: rgba(16, 185, 129, 0.12); border-left: 3px solid var(--emerald); border-radius: 4px; font-size: 11.5px;">
+        <strong>7.58 mm Solid Bronze Burst Wall:</strong> Unbroken metal barrier between OTL (95.92 mm) and Groove Root (103.50 mm). Easily withstands 24.0 bar hydraulic test without yielding.
+      </div>
+    </div>
+
+    <!-- CARD 3: PASS PARTITION & ROW 1 ELEVATION -->
+    <div class="card">
+      <div class="card-head">
+        <span>3. PASS PARTITION STRIP & ROW 1</span>
+        <span style="font-size: 11px; color: var(--gold); font-family: monospace;">2-PASS DIVISION</span>
+      </div>
+      <table class="spec-table">
+        <tbody>
+          <tr>
+            <td class="param-name">Horizontal Centerline Datum</td>
+            <td class="param-val">Y = 0.00 mm</td>
+            <td>Master dividing baseline</td>
+          </tr>
+          <tr>
+            <td class="param-name">Pass Lane Boundaries</td>
+            <td class="param-val">Y = ± 5.00 mm</td>
+            <td>10.0 mm solid no-drill strip</td>
+          </tr>
+          <tr>
+            <td class="param-name">Cast Header Divider Rib</td>
+            <td class="param-val">Y = ± 3.00 mm</td>
+            <td>6.0 mm thick cast divider rib</td>
+          </tr>
+          <tr>
+            <td class="param-name">Clear Gasket Seating Margin</td>
+            <td class="param-val" style="color:var(--emerald);">2.00 mm</td>
+            <td>5.0 mm lane edge - 3.0 mm rib edge</td>
+          </tr>
+          <tr>
+            <td class="param-name">Row 1 Centerline Elevation</td>
+            <td class="param-val">Y = ± 9.00 mm</td>
+            <td>5.0 mm lane half + 4.0 mm tube radius</td>
+          </tr>
+          <tr>
+            <td class="param-name">Center-to-Center Across Lane</td>
+            <td class="param-val">18.00 mm</td>
+            <td>Top Row 1 center to Bottom Row 1 center</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+  let currentZoom = 1.0;
+  const img = document.getElementById('main-plate');
+
+  function zoomIn() {
+    currentZoom += 0.25;
+    applyZoom();
+  }
+  function zoomOut() {
+    if (currentZoom > 0.4) {
+      currentZoom -= 0.25;
+      applyZoom();
+    }
+  }
+  function resetZoom() {
+    currentZoom = 1.0;
+    img.style.maxWidth = '100%';
+    img.style.width = 'auto';
+    img.style.transform = 'none';
+  }
+  function actualSize() {
+    currentZoom = 2.0;
+    img.style.maxWidth = 'none';
+    img.style.width = '3200px';
+    applyZoom();
+  }
+  function applyZoom() {
+    img.style.transform = 'scale(' + currentZoom + ')';
+    img.style.transformOrigin = 'center center';
+  }
+</script>
+
+</body>
+</html>
