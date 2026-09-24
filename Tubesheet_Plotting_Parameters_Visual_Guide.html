@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Interactive Tubesheet Plotting Parameters Visual Guide | PAL ENGINEERS</title>
+<style>
+  :root {
+    --bg-dark: #0b1120;
+    --card-bg: #131d35;
+    --border: #1e293b;
+    --accent: #38bdf8;
+    --gold: #f59e0b;
+    --emerald: #10b981;
+    --rose: #ef4444;
+    --slate: #94a3b8;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    background: var(--bg-dark);
+    color: #f8fafc;
+    padding: 20px;
+    line-height: 1.5;
+  }
+  .container {
+    max-width: 1600px;
+    margin: 0 auto;
+  }
+  header {
+    background: #0f172a;
+    border: 1px solid var(--border);
+    border-top: 4px solid var(--gold);
+    border-radius: 10px;
+    padding: 20px 26px;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  .header-left h1 {
+    font-size: 20px;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: -0.3px;
+  }
+  .header-left p {
+    font-size: 12.5px;
+    color: var(--slate);
+    margin-top: 4px;
+  }
+  .badge-hdr {
+    background: rgba(245, 158, 11, 0.15);
+    color: var(--gold);
+    border: 1px solid var(--gold);
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 700;
+  }
+  
+  .layout-grid {
+    display: grid;
+    grid-template-columns: 880px 1fr;
+    gap: 20px;
+  }
+  @media (max-width: 1400px) {
+    .layout-grid { grid-template-columns: 1fr; }
+  }
+
+  /* CANVAS CARD */
+  .canvas-card {
+    background: #0f172a;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  .canvas-toolbar {
+    padding: 12px 18px;
+    background: #1e293b;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .toggle-btn {
+    background: rgba(56, 189, 248, 0.1);
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    padding: 5px 12px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .toggle-btn.active {
+    background: var(--accent);
+    color: #0b1120;
+  }
+  .svg-wrap {
+    background: #020617;
+    position: relative;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  svg {
+    max-width: 100%;
+    height: auto;
+  }
+  .tube-circle {
+    fill: #f59e0b;
+    stroke: #b45309;
+    stroke-width: 0.8;
+    transition: all 0.15s;
+    cursor: crosshair;
+  }
+  .tube-circle:hover {
+    fill: #ffffff !important;
+    stroke: #38bdf8 !important;
+    stroke-width: 2.5 !important;
+    filter: drop-shadow(0 0 6px #38bdf8);
+  }
+
+  /* RIGHT DETAILS COLUMN */
+  .details-col {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px 18px;
+  }
+  .card-head {
+    font-size: 14px;
+    font-weight: 800;
+    color: #ffffff;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    padding-bottom: 8px;
+    margin-bottom: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .param-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+  }
+  .param-table th {
+    text-align: left;
+    color: var(--slate);
+    font-size: 11px;
+    padding: 6px 8px;
+    border-bottom: 1px solid var(--border);
+    text-transform: uppercase;
+  }
+  .param-table td {
+    padding: 7px 8px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+  .param-table tr:hover td {
+    background: rgba(255,255,255,0.03);
+  }
+  .param-name {
+    font-weight: 600;
+    color: #e2e8f0;
+  }
+  .param-val {
+    font-family: monospace;
+    font-weight: 700;
+    color: var(--accent);
+  }
+  .param-desc {
+    font-size: 11px;
+    color: var(--slate);
+  }
+  .hover-info-box {
+    background: #020617;
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    padding: 10px 14px;
+    border-radius: 4px;
+    font-size: 12px;
+    min-height: 48px;
+    display: flex;
+    align-items: center;
+  }
+  .legend-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    font-size: 11.5px;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .legend-swatch {
+    width: 14px;
+    height: 14px;
+    border-radius: 3px;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <header>
+    <div class="header-left">
+      <h1>PAL ENGINEERS • 354-TUBE PLOTTING PARAMETERS VISUAL GUIDE</h1>
+      <p>Model: PICKER AM18SFD0AA | Client: M/s. SATIA INDUSTRIES LIMITED | Plan: P4429 Rev 3 (Datasheet 6114)</p>
+    </div>
+    <div style="display: flex; gap: 10px; align-items: center;">
+      <span class="badge-hdr">354 TUBES ON 9.05 mm PITCH</span>
+      <a href="http://127.0.0.1:8000/Manual_Drafting_Tubesheet_Engineering_Plate.html" target="_blank" style="color:var(--accent); font-size:12px; font-weight:700; text-decoration:none; border:1px solid var(--accent); padding:5px 12px; border-radius:4px;">Open 4.5K Drafting Plate &rarr;</a>
+    </div>
+  </header>
+
+  <div class="layout-grid">
+    
+    <!-- LEFT: INTERACTIVE SVG PLOT -->
+    <div class="canvas-card">
+      <div class="canvas-toolbar">
+        <div style="font-size: 12px; font-weight: 700; color: #ffffff;">
+          INTERACTIVE 1:1 SCALE SVG PLOTTING CANVAS
+        </div>
+        <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+          <button class="toggle-btn active" id="btn-rings" onclick="toggleLayer('rings')">Concentric Rings</button>
+          <button class="toggle-btn active" id="btn-bolts" onclick="toggleLayer('bolts')">12x M12 Bolts</button>
+          <button class="toggle-btn active" id="btn-lane" onclick="toggleLayer('lane')">10mm Pass Lane</button>
+          <button class="toggle-btn active" id="btn-tubes" onclick="toggleLayer('tubes')">354 Tubes</button>
+        </div>
+      </div>
+      
+      <div class="svg-wrap">
+        <svg id="master-svg" viewBox="0 0 900 900" width="860" height="860">
+          <defs>
+            <radialGradient id="centerGlow" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#1e293b" stop-opacity="0.6"/>
+              <stop offset="100%" stop-color="#020617" stop-opacity="0"/>
+            </radialGradient>
+          </defs>
+
+          <!-- Background circle glow -->
+          <circle cx="450" cy="450" r="430" fill="url(#centerGlow)"/>
+
+          <!-- Crosshair Centerlines -->
+          <line x1="30" y1="450" x2="870" y2="450" stroke="#334155" stroke-width="1.2" stroke-dasharray="10 4 2 4"/>
+          <line x1="450" y1="30" x2="450" y2="870" stroke="#334155" stroke-width="1.2" stroke-dasharray="10 4 2 4"/>
+
+          <!-- 10 mm Pass Partition Lane -->
+          <g id="layer-lane">
+            <rect x="132.9" y="436.0" width="634.2" height="28.0" fill="rgba(245, 158, 11, 0.22)" stroke="#f59e0b" stroke-width="1.5" stroke-dasharray="4 2"/>
+            <text x="450" y="453" fill="#fbbf24" font-size="9.5" font-weight="bold" text-anchor="middle" font-family="monospace">10.0 mm PASS PARTITION SOLID STRIP (Y = 0 ± 5.0 mm)</text>
+          </g>
+
+          <!-- Concentric Boundary Rings -->
+          <g id="layer-rings">
+            
+<!-- Stationary Flange OD 285 mm -->
+<circle cx="450" cy="450" r="399.0" class="ring-flange" stroke="#64748b" stroke-width="2.5" fill="none" stroke-dasharray="8 4"/>
+<!-- Bolt Circle PCD 260 mm -->
+<circle cx="450" cy="450" r="364.0" class="ring-pcd" stroke="#ef4444" stroke-width="1.8" fill="none" stroke-dasharray="6 4"/>
+<!-- Shell Bore ID 226.5 mm -->
+<circle cx="450" cy="450" r="317.1" class="ring-shell" stroke="#38bdf8" stroke-width="2.2" fill="none"/>
+<!-- Floating Tubesheet OD 214 mm -->
+<circle cx="450" cy="450" r="299.6" class="ring-float" stroke="#f59e0b" stroke-width="2.0" fill="none"/>
+<!-- O-Ring Groove Root 207 mm -->
+<circle cx="450" cy="450" r="289.8" class="ring-groove" stroke="#d97706" stroke-width="1.6" fill="none" stroke-dasharray="4 3"/>
+<!-- Discrete OTL 191.83 mm -->
+<circle cx="450" cy="450" r="268.6" class="ring-otl" stroke="#10b981" stroke-width="2.2" fill="none" stroke-dasharray="5 3"/>
+
+          </g>
+
+          <!-- 12 M12 Bolt Holes on PCD -->
+          <g id="layer-bolts">
+            <circle cx="801.6" cy="355.8" r="18.2" fill="#1e293b" stroke="#ef4444" stroke-width="1.5"/>
+<text x="801.6" y="358.8" fill="#fca5a5" font-size="8" text-anchor="middle" font-family="monospace">M12</text>
+<circle cx="707.4" cy="192.6" r="18.2" fill="#1e293b" stroke="#ef4444" stroke-width="1.5"/>
+<text x="707.4" y="195.6" fill="#fca5a5" font-size="8" text-anchor="middle" font-family="monospace">M12</text>
+<circle cx="544.2" cy="98.4" r="18.2" fill="#1e293b" stroke="#ef4444" stroke-width="1.5"/>
+<text x="544.2" y="101.4" fill="#fca5a5" font-size="8" text-anchor="middle" font-family="monospace">M12</text>
+<circle cx="355.8" cy="98.4" r="18.2" fill="#1e293b" stroke="#ef4444" stroke-width="1.5"/>
+<text x="355.8" y="101.4" fill="#fca5a5" font-size="8" text-anchor="middle" font-family="monospace">M12</text>
+<circle cx="192.6" cy="192.6" r="18.2" fill="#1e293b" stroke="#ef4444" stroke-width="1.5"/>
+<text x="192.6" y="195.6" fill="#fca5a5" font-size="8" text-anchor="middle" font-family="monospace">M12</text>
+<circle cx="98.4" cy="355.8" r="18.2" fill="#1e293b" stroke="#ef4444" stroke-width="1.5"/>
+<text x="98.4" y="358.8" fill="#fca5a5" font-size="8" text-anchor="middle" font-family="monospace">M12</text>
+<circle cx="98.4" cy="544.2" r="18.2" fill="#1e293b" stroke="#ef4444" stroke-width="1.5"/>
+<text x="98.4" y="547.2" fill="#fca5a5" font-size="8" text-anchor="middle" font-family="monospace">M12</text>
+<circle cx="192.6" cy="707.4" r="18.2" fill="#1e293b" stroke="#ef4444" stroke-width="1.5"/>
+<text x="192.6" y="710.4" fill="#fca5a5" font-size="8" text-anchor="middle" font-family="monospace">M12</text>
+<circle cx="355.8" cy="801.6" r="18.2" fill="#1e293b" stroke="#ef4444" stroke-width="1.5"/>
+<text x="355.8" y="804.6" fill="#fca5a5" font-size="8" text-anchor="middle" font-family="monospace">M12</text>
+<circle cx="544.2" cy="801.6" r="18.2" fill="#1e293b" stroke="#ef4444" stroke-width="1.5"/>
+<text x="544.2" y="804.6" fill="#fca5a5" font-size="8" text-anchor="middle" font-family="monospace">M12</text>
+<circle cx="707.4" cy="707.4" r="18.2" fill="#1e293b" stroke="#ef4444" stroke-width="1.5"/>
+<text x="707.4" y="710.4" fill="#fca5a5" font-size="8" text-anchor="middle" font-family="monospace">M12</text>
+<circle cx="801.6" cy="544.2" r="18.2" fill="#1e293b" stroke="#ef4444" stroke-width="1.5"/>
+<text x="801.6" y="547.2" fill="#fca5a5" font-size="8" text-anchor="middle" font-family="monospace">M12</text>
+          </g>
+
+          <!-- 354 Copper Tubes -->
+          <g id="layer-tubes">
+            <circle class="tube-circle row-1 pass-top" cx="450.0" cy="424.8" r="11.2" data-x="0.0" data-y="9.0" data-row="1" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-1 pass-top" cx="424.7" cy="424.8" r="11.2" data-x="-9.05" data-y="9.0" data-row="1" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-1 pass-top" cx="475.3" cy="424.8" r="11.2" data-x="9.05" data-y="9.0" data-row="1" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-2 pass-top" cx="437.3" cy="402.9" r="11.2" data-x="-4.525" data-y="16.838" data-row="2" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-2 pass-top" cx="462.7" cy="402.9" r="11.2" data-x="4.525" data-y="16.838" data-row="2" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-1 pass-top" cx="399.3" cy="424.8" r="11.2" data-x="-18.1" data-y="9.0" data-row="1" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-1 pass-top" cx="500.7" cy="424.8" r="11.2" data-x="18.1" data-y="9.0" data-row="1" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-2 pass-top" cx="412.0" cy="402.9" r="11.2" data-x="-13.575" data-y="16.838" data-row="2" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-2 pass-top" cx="488.0" cy="402.9" r="11.2" data-x="13.575" data-y="16.838" data-row="2" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-3 pass-top" cx="450.0" cy="380.9" r="11.2" data-x="0.0" data-y="24.675" data-row="3" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-3 pass-top" cx="424.7" cy="380.9" r="11.2" data-x="-9.05" data-y="24.675" data-row="3" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-3 pass-top" cx="475.3" cy="380.9" r="11.2" data-x="9.05" data-y="24.675" data-row="3" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-2 pass-top" cx="386.6" cy="402.9" r="11.2" data-x="-22.625" data-y="16.838" data-row="2" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-2 pass-top" cx="513.4" cy="402.9" r="11.2" data-x="22.625" data-y="16.838" data-row="2" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-1 pass-top" cx="374.0" cy="424.8" r="11.2" data-x="-27.15" data-y="9.0" data-row="1" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-1 pass-top" cx="526.0" cy="424.8" r="11.2" data-x="27.15" data-y="9.0" data-row="1" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-3 pass-top" cx="399.3" cy="380.9" r="11.2" data-x="-18.1" data-y="24.675" data-row="3" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-3 pass-top" cx="500.7" cy="380.9" r="11.2" data-x="18.1" data-y="24.675" data-row="3" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-4 pass-top" cx="437.3" cy="359.0" r="11.2" data-x="-4.525" data-y="32.513" data-row="4" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-4 pass-top" cx="462.7" cy="359.0" r="11.2" data-x="4.525" data-y="32.513" data-row="4" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-4 pass-top" cx="412.0" cy="359.0" r="11.2" data-x="-13.575" data-y="32.513" data-row="4" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-4 pass-top" cx="488.0" cy="359.0" r="11.2" data-x="13.575" data-y="32.513" data-row="4" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-2 pass-top" cx="361.3" cy="402.9" r="11.2" data-x="-31.675" data-y="16.838" data-row="2" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-2 pass-top" cx="538.7" cy="402.9" r="11.2" data-x="31.675" data-y="16.838" data-row="2" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-3 pass-top" cx="374.0" cy="380.9" r="11.2" data-x="-27.15" data-y="24.675" data-row="3" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-3 pass-top" cx="526.0" cy="380.9" r="11.2" data-x="27.15" data-y="24.675" data-row="3" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-1 pass-top" cx="348.6" cy="424.8" r="11.2" data-x="-36.2" data-y="9.0" data-row="1" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-1 pass-top" cx="551.4" cy="424.8" r="11.2" data-x="36.2" data-y="9.0" data-row="1" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-4 pass-top" cx="386.6" cy="359.0" r="11.2" data-x="-22.625" data-y="32.513" data-row="4" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-4 pass-top" cx="513.4" cy="359.0" r="11.2" data-x="22.625" data-y="32.513" data-row="4" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-5 pass-top" cx="450.0" cy="337.0" r="11.2" data-x="0.0" data-y="40.35" data-row="5" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-5 pass-top" cx="424.7" cy="337.0" r="11.2" data-x="-9.05" data-y="40.35" data-row="5" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-5 pass-top" cx="475.3" cy="337.0" r="11.2" data-x="9.05" data-y="40.35" data-row="5" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-3 pass-top" cx="348.6" cy="380.9" r="11.2" data-x="-36.2" data-y="24.675" data-row="3" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-3 pass-top" cx="551.4" cy="380.9" r="11.2" data-x="36.2" data-y="24.675" data-row="3" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-2 pass-top" cx="336.0" cy="402.9" r="11.2" data-x="-40.725" data-y="16.838" data-row="2" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-2 pass-top" cx="564.0" cy="402.9" r="11.2" data-x="40.725" data-y="16.838" data-row="2" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-5 pass-top" cx="399.3" cy="337.0" r="11.2" data-x="-18.1" data-y="40.35" data-row="5" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-5 pass-top" cx="500.7" cy="337.0" r="11.2" data-x="18.1" data-y="40.35" data-row="5" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-4 pass-top" cx="361.3" cy="359.0" r="11.2" data-x="-31.675" data-y="32.513" data-row="4" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-4 pass-top" cx="538.7" cy="359.0" r="11.2" data-x="31.675" data-y="32.513" data-row="4" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-1 pass-top" cx="323.3" cy="424.8" r="11.2" data-x="-45.25" data-y="9.0" data-row="1" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-1 pass-top" cx="576.7" cy="424.8" r="11.2" data-x="45.25" data-y="9.0" data-row="1" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-6 pass-top" cx="437.3" cy="315.1" r="11.2" data-x="-4.525" data-y="48.188" data-row="6" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-6 pass-top" cx="462.7" cy="315.1" r="11.2" data-x="4.525" data-y="48.188" data-row="6" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-5 pass-top" cx="374.0" cy="337.0" r="11.2" data-x="-27.15" data-y="40.35" data-row="5" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-5 pass-top" cx="526.0" cy="337.0" r="11.2" data-x="27.15" data-y="40.35" data-row="5" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-6 pass-top" cx="412.0" cy="315.1" r="11.2" data-x="-13.575" data-y="48.188" data-row="6" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-6 pass-top" cx="488.0" cy="315.1" r="11.2" data-x="13.575" data-y="48.188" data-row="6" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-3 pass-top" cx="323.3" cy="380.9" r="11.2" data-x="-45.25" data-y="24.675" data-row="3" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-3 pass-top" cx="576.7" cy="380.9" r="11.2" data-x="45.25" data-y="24.675" data-row="3" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-4 pass-top" cx="336.0" cy="359.0" r="11.2" data-x="-40.725" data-y="32.513" data-row="4" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-4 pass-top" cx="564.0" cy="359.0" r="11.2" data-x="40.725" data-y="32.513" data-row="4" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-2 pass-top" cx="589.4" cy="402.9" r="11.2" data-x="49.775" data-y="16.838" data-row="2" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-2 pass-top" cx="310.6" cy="402.9" r="11.2" data-x="-49.775" data-y="16.838" data-row="2" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-6 pass-top" cx="386.6" cy="315.1" r="11.2" data-x="-22.625" data-y="48.188" data-row="6" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-6 pass-top" cx="513.4" cy="315.1" r="11.2" data-x="22.625" data-y="48.188" data-row="6" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-5 pass-top" cx="348.6" cy="337.0" r="11.2" data-x="-36.2" data-y="40.35" data-row="5" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-5 pass-top" cx="551.4" cy="337.0" r="11.2" data-x="36.2" data-y="40.35" data-row="5" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-1 pass-top" cx="298.0" cy="424.8" r="11.2" data-x="-54.3" data-y="9.0" data-row="1" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-1 pass-top" cx="602.0" cy="424.8" r="11.2" data-x="54.3" data-y="9.0" data-row="1" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-7 pass-top" cx="450.0" cy="293.1" r="11.2" data-x="0.0" data-y="56.025" data-row="7" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-7 pass-top" cx="424.7" cy="293.1" r="11.2" data-x="-9.05" data-y="56.025" data-row="7" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-7 pass-top" cx="475.3" cy="293.1" r="11.2" data-x="9.05" data-y="56.025" data-row="7" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-6 pass-top" cx="361.3" cy="315.1" r="11.2" data-x="-31.675" data-y="48.188" data-row="6" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-6 pass-top" cx="538.7" cy="315.1" r="11.2" data-x="31.675" data-y="48.188" data-row="6" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-7 pass-top" cx="399.3" cy="293.1" r="11.2" data-x="-18.1" data-y="56.025" data-row="7" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-7 pass-top" cx="500.7" cy="293.1" r="11.2" data-x="18.1" data-y="56.025" data-row="7" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-4 pass-top" cx="589.4" cy="359.0" r="11.2" data-x="49.775" data-y="32.513" data-row="4" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-4 pass-top" cx="310.6" cy="359.0" r="11.2" data-x="-49.775" data-y="32.513" data-row="4" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-3 pass-top" cx="298.0" cy="380.9" r="11.2" data-x="-54.3" data-y="24.675" data-row="3" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-3 pass-top" cx="602.0" cy="380.9" r="11.2" data-x="54.3" data-y="24.675" data-row="3" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-5 pass-top" cx="323.3" cy="337.0" r="11.2" data-x="-45.25" data-y="40.35" data-row="5" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-5 pass-top" cx="576.7" cy="337.0" r="11.2" data-x="45.25" data-y="40.35" data-row="5" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-2 pass-top" cx="614.7" cy="402.9" r="11.2" data-x="58.825" data-y="16.838" data-row="2" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-2 pass-top" cx="285.3" cy="402.9" r="11.2" data-x="-58.825" data-y="16.838" data-row="2" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-7 pass-top" cx="374.0" cy="293.1" r="11.2" data-x="-27.15" data-y="56.025" data-row="7" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-7 pass-top" cx="526.0" cy="293.1" r="11.2" data-x="27.15" data-y="56.025" data-row="7" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-6 pass-top" cx="336.0" cy="315.1" r="11.2" data-x="-40.725" data-y="48.188" data-row="6" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-6 pass-top" cx="564.0" cy="315.1" r="11.2" data-x="40.725" data-y="48.188" data-row="6" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-1 pass-top" cx="272.6" cy="424.8" r="11.2" data-x="-63.35" data-y="9.0" data-row="1" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-1 pass-top" cx="627.4" cy="424.8" r="11.2" data-x="63.35" data-y="9.0" data-row="1" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-8 pass-top" cx="437.3" cy="271.2" r="11.2" data-x="-4.525" data-y="63.863" data-row="8" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-8 pass-top" cx="462.7" cy="271.2" r="11.2" data-x="4.525" data-y="63.863" data-row="8" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-8 pass-top" cx="412.0" cy="271.2" r="11.2" data-x="-13.575" data-y="63.863" data-row="8" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-8 pass-top" cx="488.0" cy="271.2" r="11.2" data-x="13.575" data-y="63.863" data-row="8" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-7 pass-top" cx="348.6" cy="293.1" r="11.2" data-x="-36.2" data-y="56.025" data-row="7" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-7 pass-top" cx="551.4" cy="293.1" r="11.2" data-x="36.2" data-y="56.025" data-row="7" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-4 pass-top" cx="614.7" cy="359.0" r="11.2" data-x="58.825" data-y="32.513" data-row="4" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-4 pass-top" cx="285.3" cy="359.0" r="11.2" data-x="-58.825" data-y="32.513" data-row="4" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-5 pass-top" cx="298.0" cy="337.0" r="11.2" data-x="-54.3" data-y="40.35" data-row="5" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-5 pass-top" cx="602.0" cy="337.0" r="11.2" data-x="54.3" data-y="40.35" data-row="5" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-8 pass-top" cx="386.6" cy="271.2" r="11.2" data-x="-22.625" data-y="63.863" data-row="8" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-8 pass-top" cx="513.4" cy="271.2" r="11.2" data-x="22.625" data-y="63.863" data-row="8" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-3 pass-top" cx="272.6" cy="380.9" r="11.2" data-x="-63.35" data-y="24.675" data-row="3" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-3 pass-top" cx="627.4" cy="380.9" r="11.2" data-x="63.35" data-y="24.675" data-row="3" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-6 pass-top" cx="589.4" cy="315.1" r="11.2" data-x="49.775" data-y="48.188" data-row="6" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-6 pass-top" cx="310.6" cy="315.1" r="11.2" data-x="-49.775" data-y="48.188" data-row="6" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-2 pass-top" cx="260.0" cy="402.9" r="11.2" data-x="-67.875" data-y="16.838" data-row="2" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-2 pass-top" cx="640.0" cy="402.9" r="11.2" data-x="67.875" data-y="16.838" data-row="2" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-8 pass-top" cx="361.3" cy="271.2" r="11.2" data-x="-31.675" data-y="63.863" data-row="8" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-8 pass-top" cx="538.7" cy="271.2" r="11.2" data-x="31.675" data-y="63.863" data-row="8" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-9 pass-top" cx="450.0" cy="249.2" r="11.2" data-x="0.0" data-y="71.7" data-row="9" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-7 pass-top" cx="323.3" cy="293.1" r="11.2" data-x="-45.25" data-y="56.025" data-row="7" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-7 pass-top" cx="576.7" cy="293.1" r="11.2" data-x="45.25" data-y="56.025" data-row="7" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-9 pass-top" cx="424.7" cy="249.2" r="11.2" data-x="-9.05" data-y="71.7" data-row="9" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-9 pass-top" cx="475.3" cy="249.2" r="11.2" data-x="9.05" data-y="71.7" data-row="9" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-1 pass-top" cx="247.3" cy="424.8" r="11.2" data-x="-72.4" data-y="9.0" data-row="1" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-1 pass-top" cx="652.7" cy="424.8" r="11.2" data-x="72.4" data-y="9.0" data-row="1" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-9 pass-top" cx="399.3" cy="249.2" r="11.2" data-x="-18.1" data-y="71.7" data-row="9" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-9 pass-top" cx="500.7" cy="249.2" r="11.2" data-x="18.1" data-y="71.7" data-row="9" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-5 pass-top" cx="272.6" cy="337.0" r="11.2" data-x="-63.35" data-y="40.35" data-row="5" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-5 pass-top" cx="627.4" cy="337.0" r="11.2" data-x="63.35" data-y="40.35" data-row="5" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-4 pass-top" cx="260.0" cy="359.0" r="11.2" data-x="-67.875" data-y="32.513" data-row="4" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-4 pass-top" cx="640.0" cy="359.0" r="11.2" data-x="67.875" data-y="32.513" data-row="4" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-8 pass-top" cx="336.0" cy="271.2" r="11.2" data-x="-40.725" data-y="63.863" data-row="8" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-8 pass-top" cx="564.0" cy="271.2" r="11.2" data-x="40.725" data-y="63.863" data-row="8" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-6 pass-top" cx="285.3" cy="315.1" r="11.2" data-x="-58.825" data-y="48.188" data-row="6" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-6 pass-top" cx="614.7" cy="315.1" r="11.2" data-x="58.825" data-y="48.188" data-row="6" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-3 pass-top" cx="247.3" cy="380.9" r="11.2" data-x="-72.4" data-y="24.675" data-row="3" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-3 pass-top" cx="652.7" cy="380.9" r="11.2" data-x="72.4" data-y="24.675" data-row="3" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-9 pass-top" cx="374.0" cy="249.2" r="11.2" data-x="-27.15" data-y="71.7" data-row="9" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-9 pass-top" cx="526.0" cy="249.2" r="11.2" data-x="27.15" data-y="71.7" data-row="9" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-7 pass-top" cx="298.0" cy="293.1" r="11.2" data-x="-54.3" data-y="56.025" data-row="7" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-7 pass-top" cx="602.0" cy="293.1" r="11.2" data-x="54.3" data-y="56.025" data-row="7" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-2 pass-top" cx="234.6" cy="402.9" r="11.2" data-x="-76.925" data-y="16.838" data-row="2" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-2 pass-top" cx="665.4" cy="402.9" r="11.2" data-x="76.925" data-y="16.838" data-row="2" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-10 pass-top" cx="437.3" cy="227.3" r="11.2" data-x="-4.525" data-y="79.538" data-row="10" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-10 pass-top" cx="462.7" cy="227.3" r="11.2" data-x="4.525" data-y="79.538" data-row="10" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-9 pass-top" cx="348.6" cy="249.2" r="11.2" data-x="-36.2" data-y="71.7" data-row="9" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-9 pass-top" cx="551.4" cy="249.2" r="11.2" data-x="36.2" data-y="71.7" data-row="9" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-10 pass-top" cx="412.0" cy="227.3" r="11.2" data-x="-13.575" data-y="79.538" data-row="10" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-10 pass-top" cx="488.0" cy="227.3" r="11.2" data-x="13.575" data-y="79.538" data-row="10" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-8 pass-top" cx="589.4" cy="271.2" r="11.2" data-x="49.775" data-y="63.863" data-row="8" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-8 pass-top" cx="310.6" cy="271.2" r="11.2" data-x="-49.775" data-y="63.863" data-row="8" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-1 pass-top" cx="221.9" cy="424.8" r="11.2" data-x="-81.45" data-y="9.0" data-row="1" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-1 pass-top" cx="678.1" cy="424.8" r="11.2" data-x="81.45" data-y="9.0" data-row="1" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-10 pass-top" cx="386.6" cy="227.3" r="11.2" data-x="-22.625" data-y="79.538" data-row="10" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-10 pass-top" cx="513.4" cy="227.3" r="11.2" data-x="22.625" data-y="79.538" data-row="10" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-5 pass-top" cx="247.3" cy="337.0" r="11.2" data-x="-72.4" data-y="40.35" data-row="5" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-5 pass-top" cx="652.7" cy="337.0" r="11.2" data-x="72.4" data-y="40.35" data-row="5" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-6 pass-top" cx="260.0" cy="315.1" r="11.2" data-x="-67.875" data-y="48.188" data-row="6" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-6 pass-top" cx="640.0" cy="315.1" r="11.2" data-x="67.875" data-y="48.188" data-row="6" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-4 pass-top" cx="234.6" cy="359.0" r="11.2" data-x="-76.925" data-y="32.513" data-row="4" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-4 pass-top" cx="665.4" cy="359.0" r="11.2" data-x="76.925" data-y="32.513" data-row="4" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-7 pass-top" cx="272.6" cy="293.1" r="11.2" data-x="-63.35" data-y="56.025" data-row="7" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-7 pass-top" cx="627.4" cy="293.1" r="11.2" data-x="63.35" data-y="56.025" data-row="7" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-9 pass-top" cx="323.3" cy="249.2" r="11.2" data-x="-45.25" data-y="71.7" data-row="9" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-9 pass-top" cx="576.7" cy="249.2" r="11.2" data-x="45.25" data-y="71.7" data-row="9" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-3 pass-top" cx="221.9" cy="380.9" r="11.2" data-x="-81.45" data-y="24.675" data-row="3" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-3 pass-top" cx="678.1" cy="380.9" r="11.2" data-x="81.45" data-y="24.675" data-row="3" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-10 pass-top" cx="361.3" cy="227.3" r="11.2" data-x="-31.675" data-y="79.538" data-row="10" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-10 pass-top" cx="538.7" cy="227.3" r="11.2" data-x="31.675" data-y="79.538" data-row="10" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-8 pass-top" cx="614.7" cy="271.2" r="11.2" data-x="58.825" data-y="63.863" data-row="8" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-8 pass-top" cx="285.3" cy="271.2" r="11.2" data-x="-58.825" data-y="63.863" data-row="8" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-11 pass-top" cx="450.0" cy="205.4" r="11.2" data-x="0.0" data-y="87.375" data-row="11" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-2 pass-top" cx="209.3" cy="402.9" r="11.2" data-x="-85.975" data-y="16.838" data-row="2" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-2 pass-top" cx="690.7" cy="402.9" r="11.2" data-x="85.975" data-y="16.838" data-row="2" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-11 pass-top" cx="424.7" cy="205.4" r="11.2" data-x="-9.05" data-y="87.375" data-row="11" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-11 pass-top" cx="475.3" cy="205.4" r="11.2" data-x="9.05" data-y="87.375" data-row="11" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-11 pass-top" cx="399.3" cy="205.4" r="11.2" data-x="-18.1" data-y="87.375" data-row="11" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-11 pass-top" cx="500.7" cy="205.4" r="11.2" data-x="18.1" data-y="87.375" data-row="11" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-10 pass-top" cx="336.0" cy="227.3" r="11.2" data-x="-40.725" data-y="79.538" data-row="10" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-10 pass-top" cx="564.0" cy="227.3" r="11.2" data-x="40.725" data-y="79.538" data-row="10" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-9 pass-top" cx="298.0" cy="249.2" r="11.2" data-x="-54.3" data-y="71.7" data-row="9" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-9 pass-top" cx="602.0" cy="249.2" r="11.2" data-x="54.3" data-y="71.7" data-row="9" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-6 pass-top" cx="234.6" cy="315.1" r="11.2" data-x="-76.925" data-y="48.188" data-row="6" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-6 pass-top" cx="665.4" cy="315.1" r="11.2" data-x="76.925" data-y="48.188" data-row="6" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-5 pass-top" cx="221.9" cy="337.0" r="11.2" data-x="-81.45" data-y="40.35" data-row="5" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-5 pass-top" cx="678.1" cy="337.0" r="11.2" data-x="81.45" data-y="40.35" data-row="5" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-1 pass-top" cx="196.6" cy="424.8" r="11.2" data-x="-90.5" data-y="9.0" data-row="1" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-1 pass-top" cx="703.4" cy="424.8" r="11.2" data-x="90.5" data-y="9.0" data-row="1" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-11 pass-top" cx="374.0" cy="205.4" r="11.2" data-x="-27.15" data-y="87.375" data-row="11" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-11 pass-top" cx="526.0" cy="205.4" r="11.2" data-x="27.15" data-y="87.375" data-row="11" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-7 pass-top" cx="247.3" cy="293.1" r="11.2" data-x="-72.4" data-y="56.025" data-row="7" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-7 pass-top" cx="652.7" cy="293.1" r="11.2" data-x="72.4" data-y="56.025" data-row="7" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-4 pass-top" cx="209.3" cy="359.0" r="11.2" data-x="-85.975" data-y="32.513" data-row="4" data-half="Top Pass (Pass 1)"/>
+<circle class="tube-circle row-1 pass-bot" cx="450.0" cy="475.2" r="11.2" data-x="0.0" data-y="-9.0" data-row="1" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-1 pass-bot" cx="424.7" cy="475.2" r="11.2" data-x="-9.05" data-y="-9.0" data-row="1" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-1 pass-bot" cx="475.3" cy="475.2" r="11.2" data-x="9.05" data-y="-9.0" data-row="1" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-2 pass-bot" cx="437.3" cy="497.1" r="11.2" data-x="-4.525" data-y="-16.838" data-row="2" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-2 pass-bot" cx="462.7" cy="497.1" r="11.2" data-x="4.525" data-y="-16.838" data-row="2" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-1 pass-bot" cx="399.3" cy="475.2" r="11.2" data-x="-18.1" data-y="-9.0" data-row="1" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-1 pass-bot" cx="500.7" cy="475.2" r="11.2" data-x="18.1" data-y="-9.0" data-row="1" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-2 pass-bot" cx="412.0" cy="497.1" r="11.2" data-x="-13.575" data-y="-16.838" data-row="2" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-2 pass-bot" cx="488.0" cy="497.1" r="11.2" data-x="13.575" data-y="-16.838" data-row="2" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-3 pass-bot" cx="450.0" cy="519.1" r="11.2" data-x="0.0" data-y="-24.675" data-row="3" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-3 pass-bot" cx="424.7" cy="519.1" r="11.2" data-x="-9.05" data-y="-24.675" data-row="3" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-3 pass-bot" cx="475.3" cy="519.1" r="11.2" data-x="9.05" data-y="-24.675" data-row="3" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-2 pass-bot" cx="386.6" cy="497.1" r="11.2" data-x="-22.625" data-y="-16.838" data-row="2" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-2 pass-bot" cx="513.4" cy="497.1" r="11.2" data-x="22.625" data-y="-16.838" data-row="2" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-1 pass-bot" cx="374.0" cy="475.2" r="11.2" data-x="-27.15" data-y="-9.0" data-row="1" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-1 pass-bot" cx="526.0" cy="475.2" r="11.2" data-x="27.15" data-y="-9.0" data-row="1" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-3 pass-bot" cx="399.3" cy="519.1" r="11.2" data-x="-18.1" data-y="-24.675" data-row="3" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-3 pass-bot" cx="500.7" cy="519.1" r="11.2" data-x="18.1" data-y="-24.675" data-row="3" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-4 pass-bot" cx="437.3" cy="541.0" r="11.2" data-x="-4.525" data-y="-32.513" data-row="4" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-4 pass-bot" cx="462.7" cy="541.0" r="11.2" data-x="4.525" data-y="-32.513" data-row="4" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-4 pass-bot" cx="412.0" cy="541.0" r="11.2" data-x="-13.575" data-y="-32.513" data-row="4" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-4 pass-bot" cx="488.0" cy="541.0" r="11.2" data-x="13.575" data-y="-32.513" data-row="4" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-2 pass-bot" cx="361.3" cy="497.1" r="11.2" data-x="-31.675" data-y="-16.838" data-row="2" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-2 pass-bot" cx="538.7" cy="497.1" r="11.2" data-x="31.675" data-y="-16.838" data-row="2" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-3 pass-bot" cx="374.0" cy="519.1" r="11.2" data-x="-27.15" data-y="-24.675" data-row="3" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-3 pass-bot" cx="526.0" cy="519.1" r="11.2" data-x="27.15" data-y="-24.675" data-row="3" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-1 pass-bot" cx="348.6" cy="475.2" r="11.2" data-x="-36.2" data-y="-9.0" data-row="1" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-1 pass-bot" cx="551.4" cy="475.2" r="11.2" data-x="36.2" data-y="-9.0" data-row="1" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-4 pass-bot" cx="386.6" cy="541.0" r="11.2" data-x="-22.625" data-y="-32.513" data-row="4" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-4 pass-bot" cx="513.4" cy="541.0" r="11.2" data-x="22.625" data-y="-32.513" data-row="4" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-5 pass-bot" cx="450.0" cy="563.0" r="11.2" data-x="0.0" data-y="-40.35" data-row="5" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-5 pass-bot" cx="424.7" cy="563.0" r="11.2" data-x="-9.05" data-y="-40.35" data-row="5" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-5 pass-bot" cx="475.3" cy="563.0" r="11.2" data-x="9.05" data-y="-40.35" data-row="5" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-3 pass-bot" cx="348.6" cy="519.1" r="11.2" data-x="-36.2" data-y="-24.675" data-row="3" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-3 pass-bot" cx="551.4" cy="519.1" r="11.2" data-x="36.2" data-y="-24.675" data-row="3" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-2 pass-bot" cx="336.0" cy="497.1" r="11.2" data-x="-40.725" data-y="-16.838" data-row="2" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-2 pass-bot" cx="564.0" cy="497.1" r="11.2" data-x="40.725" data-y="-16.838" data-row="2" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-5 pass-bot" cx="399.3" cy="563.0" r="11.2" data-x="-18.1" data-y="-40.35" data-row="5" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-5 pass-bot" cx="500.7" cy="563.0" r="11.2" data-x="18.1" data-y="-40.35" data-row="5" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-4 pass-bot" cx="361.3" cy="541.0" r="11.2" data-x="-31.675" data-y="-32.513" data-row="4" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-4 pass-bot" cx="538.7" cy="541.0" r="11.2" data-x="31.675" data-y="-32.513" data-row="4" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-1 pass-bot" cx="323.3" cy="475.2" r="11.2" data-x="-45.25" data-y="-9.0" data-row="1" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-1 pass-bot" cx="576.7" cy="475.2" r="11.2" data-x="45.25" data-y="-9.0" data-row="1" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-6 pass-bot" cx="437.3" cy="584.9" r="11.2" data-x="-4.525" data-y="-48.188" data-row="6" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-6 pass-bot" cx="462.7" cy="584.9" r="11.2" data-x="4.525" data-y="-48.188" data-row="6" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-5 pass-bot" cx="374.0" cy="563.0" r="11.2" data-x="-27.15" data-y="-40.35" data-row="5" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-5 pass-bot" cx="526.0" cy="563.0" r="11.2" data-x="27.15" data-y="-40.35" data-row="5" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-6 pass-bot" cx="412.0" cy="584.9" r="11.2" data-x="-13.575" data-y="-48.188" data-row="6" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-6 pass-bot" cx="488.0" cy="584.9" r="11.2" data-x="13.575" data-y="-48.188" data-row="6" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-3 pass-bot" cx="323.3" cy="519.1" r="11.2" data-x="-45.25" data-y="-24.675" data-row="3" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-3 pass-bot" cx="576.7" cy="519.1" r="11.2" data-x="45.25" data-y="-24.675" data-row="3" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-4 pass-bot" cx="336.0" cy="541.0" r="11.2" data-x="-40.725" data-y="-32.513" data-row="4" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-4 pass-bot" cx="564.0" cy="541.0" r="11.2" data-x="40.725" data-y="-32.513" data-row="4" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-2 pass-bot" cx="589.4" cy="497.1" r="11.2" data-x="49.775" data-y="-16.838" data-row="2" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-2 pass-bot" cx="310.6" cy="497.1" r="11.2" data-x="-49.775" data-y="-16.838" data-row="2" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-6 pass-bot" cx="386.6" cy="584.9" r="11.2" data-x="-22.625" data-y="-48.188" data-row="6" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-6 pass-bot" cx="513.4" cy="584.9" r="11.2" data-x="22.625" data-y="-48.188" data-row="6" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-5 pass-bot" cx="348.6" cy="563.0" r="11.2" data-x="-36.2" data-y="-40.35" data-row="5" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-5 pass-bot" cx="551.4" cy="563.0" r="11.2" data-x="36.2" data-y="-40.35" data-row="5" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-1 pass-bot" cx="298.0" cy="475.2" r="11.2" data-x="-54.3" data-y="-9.0" data-row="1" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-1 pass-bot" cx="602.0" cy="475.2" r="11.2" data-x="54.3" data-y="-9.0" data-row="1" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-7 pass-bot" cx="450.0" cy="606.9" r="11.2" data-x="0.0" data-y="-56.025" data-row="7" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-7 pass-bot" cx="424.7" cy="606.9" r="11.2" data-x="-9.05" data-y="-56.025" data-row="7" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-7 pass-bot" cx="475.3" cy="606.9" r="11.2" data-x="9.05" data-y="-56.025" data-row="7" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-6 pass-bot" cx="361.3" cy="584.9" r="11.2" data-x="-31.675" data-y="-48.188" data-row="6" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-6 pass-bot" cx="538.7" cy="584.9" r="11.2" data-x="31.675" data-y="-48.188" data-row="6" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-7 pass-bot" cx="399.3" cy="606.9" r="11.2" data-x="-18.1" data-y="-56.025" data-row="7" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-7 pass-bot" cx="500.7" cy="606.9" r="11.2" data-x="18.1" data-y="-56.025" data-row="7" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-4 pass-bot" cx="589.4" cy="541.0" r="11.2" data-x="49.775" data-y="-32.513" data-row="4" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-4 pass-bot" cx="310.6" cy="541.0" r="11.2" data-x="-49.775" data-y="-32.513" data-row="4" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-3 pass-bot" cx="298.0" cy="519.1" r="11.2" data-x="-54.3" data-y="-24.675" data-row="3" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-3 pass-bot" cx="602.0" cy="519.1" r="11.2" data-x="54.3" data-y="-24.675" data-row="3" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-5 pass-bot" cx="323.3" cy="563.0" r="11.2" data-x="-45.25" data-y="-40.35" data-row="5" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-5 pass-bot" cx="576.7" cy="563.0" r="11.2" data-x="45.25" data-y="-40.35" data-row="5" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-2 pass-bot" cx="614.7" cy="497.1" r="11.2" data-x="58.825" data-y="-16.838" data-row="2" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-2 pass-bot" cx="285.3" cy="497.1" r="11.2" data-x="-58.825" data-y="-16.838" data-row="2" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-7 pass-bot" cx="374.0" cy="606.9" r="11.2" data-x="-27.15" data-y="-56.025" data-row="7" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-7 pass-bot" cx="526.0" cy="606.9" r="11.2" data-x="27.15" data-y="-56.025" data-row="7" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-6 pass-bot" cx="336.0" cy="584.9" r="11.2" data-x="-40.725" data-y="-48.188" data-row="6" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-6 pass-bot" cx="564.0" cy="584.9" r="11.2" data-x="40.725" data-y="-48.188" data-row="6" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-1 pass-bot" cx="272.6" cy="475.2" r="11.2" data-x="-63.35" data-y="-9.0" data-row="1" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-1 pass-bot" cx="627.4" cy="475.2" r="11.2" data-x="63.35" data-y="-9.0" data-row="1" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-8 pass-bot" cx="437.3" cy="628.8" r="11.2" data-x="-4.525" data-y="-63.863" data-row="8" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-8 pass-bot" cx="462.7" cy="628.8" r="11.2" data-x="4.525" data-y="-63.863" data-row="8" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-8 pass-bot" cx="412.0" cy="628.8" r="11.2" data-x="-13.575" data-y="-63.863" data-row="8" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-8 pass-bot" cx="488.0" cy="628.8" r="11.2" data-x="13.575" data-y="-63.863" data-row="8" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-7 pass-bot" cx="348.6" cy="606.9" r="11.2" data-x="-36.2" data-y="-56.025" data-row="7" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-7 pass-bot" cx="551.4" cy="606.9" r="11.2" data-x="36.2" data-y="-56.025" data-row="7" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-4 pass-bot" cx="614.7" cy="541.0" r="11.2" data-x="58.825" data-y="-32.513" data-row="4" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-4 pass-bot" cx="285.3" cy="541.0" r="11.2" data-x="-58.825" data-y="-32.513" data-row="4" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-5 pass-bot" cx="298.0" cy="563.0" r="11.2" data-x="-54.3" data-y="-40.35" data-row="5" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-5 pass-bot" cx="602.0" cy="563.0" r="11.2" data-x="54.3" data-y="-40.35" data-row="5" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-8 pass-bot" cx="386.6" cy="628.8" r="11.2" data-x="-22.625" data-y="-63.863" data-row="8" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-8 pass-bot" cx="513.4" cy="628.8" r="11.2" data-x="22.625" data-y="-63.863" data-row="8" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-3 pass-bot" cx="272.6" cy="519.1" r="11.2" data-x="-63.35" data-y="-24.675" data-row="3" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-3 pass-bot" cx="627.4" cy="519.1" r="11.2" data-x="63.35" data-y="-24.675" data-row="3" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-6 pass-bot" cx="589.4" cy="584.9" r="11.2" data-x="49.775" data-y="-48.188" data-row="6" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-6 pass-bot" cx="310.6" cy="584.9" r="11.2" data-x="-49.775" data-y="-48.188" data-row="6" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-2 pass-bot" cx="260.0" cy="497.1" r="11.2" data-x="-67.875" data-y="-16.838" data-row="2" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-2 pass-bot" cx="640.0" cy="497.1" r="11.2" data-x="67.875" data-y="-16.838" data-row="2" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-8 pass-bot" cx="361.3" cy="628.8" r="11.2" data-x="-31.675" data-y="-63.863" data-row="8" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-8 pass-bot" cx="538.7" cy="628.8" r="11.2" data-x="31.675" data-y="-63.863" data-row="8" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-9 pass-bot" cx="450.0" cy="650.8" r="11.2" data-x="0.0" data-y="-71.7" data-row="9" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-7 pass-bot" cx="323.3" cy="606.9" r="11.2" data-x="-45.25" data-y="-56.025" data-row="7" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-7 pass-bot" cx="576.7" cy="606.9" r="11.2" data-x="45.25" data-y="-56.025" data-row="7" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-9 pass-bot" cx="424.7" cy="650.8" r="11.2" data-x="-9.05" data-y="-71.7" data-row="9" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-9 pass-bot" cx="475.3" cy="650.8" r="11.2" data-x="9.05" data-y="-71.7" data-row="9" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-1 pass-bot" cx="247.3" cy="475.2" r="11.2" data-x="-72.4" data-y="-9.0" data-row="1" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-1 pass-bot" cx="652.7" cy="475.2" r="11.2" data-x="72.4" data-y="-9.0" data-row="1" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-9 pass-bot" cx="399.3" cy="650.8" r="11.2" data-x="-18.1" data-y="-71.7" data-row="9" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-9 pass-bot" cx="500.7" cy="650.8" r="11.2" data-x="18.1" data-y="-71.7" data-row="9" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-5 pass-bot" cx="272.6" cy="563.0" r="11.2" data-x="-63.35" data-y="-40.35" data-row="5" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-5 pass-bot" cx="627.4" cy="563.0" r="11.2" data-x="63.35" data-y="-40.35" data-row="5" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-4 pass-bot" cx="260.0" cy="541.0" r="11.2" data-x="-67.875" data-y="-32.513" data-row="4" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-4 pass-bot" cx="640.0" cy="541.0" r="11.2" data-x="67.875" data-y="-32.513" data-row="4" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-8 pass-bot" cx="336.0" cy="628.8" r="11.2" data-x="-40.725" data-y="-63.863" data-row="8" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-8 pass-bot" cx="564.0" cy="628.8" r="11.2" data-x="40.725" data-y="-63.863" data-row="8" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-6 pass-bot" cx="285.3" cy="584.9" r="11.2" data-x="-58.825" data-y="-48.188" data-row="6" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-6 pass-bot" cx="614.7" cy="584.9" r="11.2" data-x="58.825" data-y="-48.188" data-row="6" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-3 pass-bot" cx="247.3" cy="519.1" r="11.2" data-x="-72.4" data-y="-24.675" data-row="3" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-3 pass-bot" cx="652.7" cy="519.1" r="11.2" data-x="72.4" data-y="-24.675" data-row="3" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-9 pass-bot" cx="374.0" cy="650.8" r="11.2" data-x="-27.15" data-y="-71.7" data-row="9" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-9 pass-bot" cx="526.0" cy="650.8" r="11.2" data-x="27.15" data-y="-71.7" data-row="9" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-7 pass-bot" cx="298.0" cy="606.9" r="11.2" data-x="-54.3" data-y="-56.025" data-row="7" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-7 pass-bot" cx="602.0" cy="606.9" r="11.2" data-x="54.3" data-y="-56.025" data-row="7" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-2 pass-bot" cx="234.6" cy="497.1" r="11.2" data-x="-76.925" data-y="-16.838" data-row="2" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-2 pass-bot" cx="665.4" cy="497.1" r="11.2" data-x="76.925" data-y="-16.838" data-row="2" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-10 pass-bot" cx="437.3" cy="672.7" r="11.2" data-x="-4.525" data-y="-79.538" data-row="10" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-10 pass-bot" cx="462.7" cy="672.7" r="11.2" data-x="4.525" data-y="-79.538" data-row="10" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-9 pass-bot" cx="348.6" cy="650.8" r="11.2" data-x="-36.2" data-y="-71.7" data-row="9" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-9 pass-bot" cx="551.4" cy="650.8" r="11.2" data-x="36.2" data-y="-71.7" data-row="9" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-10 pass-bot" cx="412.0" cy="672.7" r="11.2" data-x="-13.575" data-y="-79.538" data-row="10" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-10 pass-bot" cx="488.0" cy="672.7" r="11.2" data-x="13.575" data-y="-79.538" data-row="10" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-8 pass-bot" cx="589.4" cy="628.8" r="11.2" data-x="49.775" data-y="-63.863" data-row="8" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-8 pass-bot" cx="310.6" cy="628.8" r="11.2" data-x="-49.775" data-y="-63.863" data-row="8" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-1 pass-bot" cx="221.9" cy="475.2" r="11.2" data-x="-81.45" data-y="-9.0" data-row="1" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-1 pass-bot" cx="678.1" cy="475.2" r="11.2" data-x="81.45" data-y="-9.0" data-row="1" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-10 pass-bot" cx="386.6" cy="672.7" r="11.2" data-x="-22.625" data-y="-79.538" data-row="10" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-10 pass-bot" cx="513.4" cy="672.7" r="11.2" data-x="22.625" data-y="-79.538" data-row="10" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-5 pass-bot" cx="247.3" cy="563.0" r="11.2" data-x="-72.4" data-y="-40.35" data-row="5" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-5 pass-bot" cx="652.7" cy="563.0" r="11.2" data-x="72.4" data-y="-40.35" data-row="5" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-6 pass-bot" cx="260.0" cy="584.9" r="11.2" data-x="-67.875" data-y="-48.188" data-row="6" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-6 pass-bot" cx="640.0" cy="584.9" r="11.2" data-x="67.875" data-y="-48.188" data-row="6" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-4 pass-bot" cx="234.6" cy="541.0" r="11.2" data-x="-76.925" data-y="-32.513" data-row="4" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-4 pass-bot" cx="665.4" cy="541.0" r="11.2" data-x="76.925" data-y="-32.513" data-row="4" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-7 pass-bot" cx="272.6" cy="606.9" r="11.2" data-x="-63.35" data-y="-56.025" data-row="7" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-7 pass-bot" cx="627.4" cy="606.9" r="11.2" data-x="63.35" data-y="-56.025" data-row="7" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-9 pass-bot" cx="323.3" cy="650.8" r="11.2" data-x="-45.25" data-y="-71.7" data-row="9" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-9 pass-bot" cx="576.7" cy="650.8" r="11.2" data-x="45.25" data-y="-71.7" data-row="9" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-3 pass-bot" cx="221.9" cy="519.1" r="11.2" data-x="-81.45" data-y="-24.675" data-row="3" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-3 pass-bot" cx="678.1" cy="519.1" r="11.2" data-x="81.45" data-y="-24.675" data-row="3" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-10 pass-bot" cx="361.3" cy="672.7" r="11.2" data-x="-31.675" data-y="-79.538" data-row="10" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-10 pass-bot" cx="538.7" cy="672.7" r="11.2" data-x="31.675" data-y="-79.538" data-row="10" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-8 pass-bot" cx="614.7" cy="628.8" r="11.2" data-x="58.825" data-y="-63.863" data-row="8" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-8 pass-bot" cx="285.3" cy="628.8" r="11.2" data-x="-58.825" data-y="-63.863" data-row="8" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-11 pass-bot" cx="450.0" cy="694.6" r="11.2" data-x="0.0" data-y="-87.375" data-row="11" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-2 pass-bot" cx="209.3" cy="497.1" r="11.2" data-x="-85.975" data-y="-16.838" data-row="2" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-2 pass-bot" cx="690.7" cy="497.1" r="11.2" data-x="85.975" data-y="-16.838" data-row="2" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-11 pass-bot" cx="424.7" cy="694.6" r="11.2" data-x="-9.05" data-y="-87.375" data-row="11" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-11 pass-bot" cx="475.3" cy="694.6" r="11.2" data-x="9.05" data-y="-87.375" data-row="11" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-11 pass-bot" cx="399.3" cy="694.6" r="11.2" data-x="-18.1" data-y="-87.375" data-row="11" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-11 pass-bot" cx="500.7" cy="694.6" r="11.2" data-x="18.1" data-y="-87.375" data-row="11" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-10 pass-bot" cx="336.0" cy="672.7" r="11.2" data-x="-40.725" data-y="-79.538" data-row="10" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-10 pass-bot" cx="564.0" cy="672.7" r="11.2" data-x="40.725" data-y="-79.538" data-row="10" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-9 pass-bot" cx="298.0" cy="650.8" r="11.2" data-x="-54.3" data-y="-71.7" data-row="9" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-9 pass-bot" cx="602.0" cy="650.8" r="11.2" data-x="54.3" data-y="-71.7" data-row="9" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-6 pass-bot" cx="234.6" cy="584.9" r="11.2" data-x="-76.925" data-y="-48.188" data-row="6" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-6 pass-bot" cx="665.4" cy="584.9" r="11.2" data-x="76.925" data-y="-48.188" data-row="6" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-5 pass-bot" cx="221.9" cy="563.0" r="11.2" data-x="-81.45" data-y="-40.35" data-row="5" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-5 pass-bot" cx="678.1" cy="563.0" r="11.2" data-x="81.45" data-y="-40.35" data-row="5" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-1 pass-bot" cx="196.6" cy="475.2" r="11.2" data-x="-90.5" data-y="-9.0" data-row="1" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-1 pass-bot" cx="703.4" cy="475.2" r="11.2" data-x="90.5" data-y="-9.0" data-row="1" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-11 pass-bot" cx="374.0" cy="694.6" r="11.2" data-x="-27.15" data-y="-87.375" data-row="11" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-11 pass-bot" cx="526.0" cy="694.6" r="11.2" data-x="27.15" data-y="-87.375" data-row="11" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-7 pass-bot" cx="247.3" cy="606.9" r="11.2" data-x="-72.4" data-y="-56.025" data-row="7" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-7 pass-bot" cx="652.7" cy="606.9" r="11.2" data-x="72.4" data-y="-56.025" data-row="7" data-half="Bottom Pass (Pass 2)"/>
+<circle class="tube-circle row-4 pass-bot" cx="209.3" cy="541.0" r="11.2" data-x="-85.975" data-y="-32.513" data-row="4" data-half="Bottom Pass (Pass 2)"/>
+          </g>
+
+          <!-- Center Datum Marker -->
+          <circle cx="450" cy="450" r="3" fill="#ef4444"/>
+          <circle cx="450" cy="450" r="8" fill="none" stroke="#ef4444" stroke-width="1.2"/>
+        </svg>
+      </div>
+
+      <div style="padding: 10px 18px; background: #0f172a; border-top: 1px solid var(--border);">
+        <div class="hover-info-box" id="info-display">
+          Hover over any tube or boundary ring to inspect exact coordinates and physical parameters.
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: PARAMETER EXPLANATION CARDS -->
+    <div class="details-col">
+
+      <!-- CARD 1: CONCENTRIC BOUNDARIES & DIAMETERS -->
+      <div class="card">
+        <div class="card-head">
+          <span>1. CONCENTRIC CIRCLE DATUMS</span>
+          <span style="font-size: 11px; color: var(--gold); font-family: monospace;">CENTER AT (0, 0)</span>
+        </div>
+        <table class="param-table">
+          <thead>
+            <tr><th>Boundary Ring</th><th>Diameter (Ø)</th><th>Radius (R)</th><th>Function</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="param-name" style="color:#94a3b8;">Stationary Flange OD</td>
+              <td class="param-val">Ø 285.0 mm</td>
+              <td>142.50 mm</td>
+              <td class="param-desc">Outer physical limit of front fixed bronze tubesheet</td>
+            </tr>
+            <tr>
+              <td class="param-name" style="color:#ef4444;">Bolt Circle (PCD)</td>
+              <td class="param-val" style="color:#ef4444;">Ø 260.0 mm</td>
+              <td>130.00 mm</td>
+              <td class="param-desc">12 Nos. M12 bolts on 30° radial rays (12.5 mm margin)</td>
+            </tr>
+            <tr>
+              <td class="param-name" style="color:#38bdf8;">Shell Inside Bore ID</td>
+              <td class="param-val" style="color:#38bdf8;">Ø 226.5 mm</td>
+              <td>113.25 mm</td>
+              <td class="param-desc">Cast aluminium shell bore containing cooling oil</td>
+            </tr>
+            <tr>
+              <td class="param-name" style="color:#f59e0b;">Floating Tubesheet OD</td>
+              <td class="param-val" style="color:#f59e0b;">Ø 214.0 mm</td>
+              <td>107.00 mm</td>
+              <td class="param-desc">Rear bronze head (6.25 mm radial expansion slip fit)</td>
+            </tr>
+            <tr>
+              <td class="param-name" style="color:#d97706;">O-Ring Groove Root</td>
+              <td class="param-val" style="color:#d97706;">Ø 207.0 mm</td>
+              <td>103.50 mm</td>
+              <td class="param-desc">Dual Viton O-ring root diameter (depth = 3.50 mm)</td>
+            </tr>
+            <tr>
+              <td class="param-name" style="color:#10b981;">Outer Tube Limit (OTL)</td>
+              <td class="param-val" style="color:#10b981;">Ø 191.83 mm</td>
+              <td>95.92 mm</td>
+              <td class="param-desc">Circle touching outer crest of the 177th outermost tube</td>
+            </tr>
+          </tbody>
+        </table>
+        
+        <div style="margin-top: 10px; padding: 8px 12px; background: rgba(16, 185, 129, 0.12); border: 1px solid var(--emerald); border-radius: 4px; font-size: 11px;">
+          <strong style="color: var(--emerald);">Solid Bronze Burst Wall = 7.58 mm:</strong> Distance from outermost tube crest (95.92 mm) to O-ring groove root (103.50 mm). Provides an unbroken metal barrier that safely contains 24.0 bar hydraulic test pressure.
+        </div>
+      </div>
+
+      <!-- CARD 2: PITCH MATRIX & LIGAMENT -->
+      <div class="card">
+        <div class="card-head">
+          <span>2. 60° TRIANGULAR PITCH & LIGAMENT</span>
+          <span style="font-size: 11px; color: var(--accent); font-family: monospace;">MAX DENSITY</span>
+        </div>
+        <table class="param-table">
+          <thead>
+            <tr><th>Pitch Feature</th><th>Value</th><th>Formula</th><th>Tool-Room Meaning</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="param-name">Tube Outer Diameter</td>
+              <td class="param-val">8.00 mm</td>
+              <td>d_tube</td>
+              <td class="param-desc">Plain seamless copper tube (0.5 mm wall)</td>
+            </tr>
+            <tr>
+              <td class="param-name">Center-to-Center Pitch</td>
+              <td class="param-val">9.05 mm</td>
+              <td>P</td>
+              <td class="param-desc">Equilateral triangular spacing along 0°, 60°, 120°</td>
+            </tr>
+            <tr>
+              <td class="param-name">Solid Ligament</td>
+              <td class="param-val" style="color:var(--emerald);">1.05 mm</td>
+              <td>P - d_tube</td>
+              <td class="param-desc">Minimum solid metal wall between adjacent holes</td>
+            </tr>
+            <tr>
+              <td class="param-name">Vertical Row Pitch</td>
+              <td class="param-val">7.838 mm</td>
+              <td>P × sin(60°)</td>
+              <td class="param-desc">Row height ΔY (9.05 × 0.866025)</td>
+            </tr>
+            <tr>
+              <td class="param-name">Row Stagger Offset</td>
+              <td class="param-val">4.525 mm</td>
+              <td>P / 2</td>
+              <td class="param-desc">Alternating horizontal shift between successive rows</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- CARD 3: PASS PARTITION LANE PARAMETERS -->
+      <div class="card">
+        <div class="card-head">
+          <span>3. PASS PARTITION LANE GEOMETRY</span>
+          <span style="font-size: 11px; color: var(--gold); font-family: monospace;">2-PASS SEPARATION</span>
+        </div>
+        <table class="param-table">
+          <tbody>
+            <tr>
+              <td class="param-name">Solid Lane Width</td>
+              <td class="param-val">10.00 mm</td>
+              <td class="param-desc">Un-drilled bronze strip from Y = -5.00 mm to Y = +5.00 mm</td>
+            </tr>
+            <tr>
+              <td class="param-name">Row 1 Elevation</td>
+              <td class="param-val">± 9.00 mm</td>
+              <td class="param-desc">Center coordinate of Row 1 (5.0 mm half-lane + 4.0 mm radius)</td>
+            </tr>
+            <tr>
+              <td class="param-name">Nearest Hole Crest to Y=0</td>
+              <td class="param-val">5.00 mm</td>
+              <td class="param-desc">Distance from horizontal centerline to inner hole edge</td>
+            </tr>
+            <tr>
+              <td class="param-name">Gasket Land Seating Margin</td>
+              <td class="param-val">2.00 mm</td>
+              <td class="param-desc">Solid bronze land between 6.0 mm header rib and tube holes</td>
+            </tr>
+            <tr>
+              <td class="param-name">Total Horizontal Row 1 Span</td>
+              <td class="param-val">189.00 mm</td>
+              <td class="param-desc">Outer crest to outer crest of 21 tubes in Row 1 (X: ±90.5 mm)</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+  function toggleLayer(layerName) {
+    var el = document.getElementById('layer-' + layerName);
+    var btn = document.getElementById('btn-' + layerName);
+    if (!el || !btn) return;
+    if (el.style.display === 'none') {
+      el.style.display = 'inline';
+      btn.classList.add('active');
+    } else {
+      el.style.display = 'none';
+      btn.classList.remove('active');
+    }
+  }
+
+  var infoBox = document.getElementById('info-display');
+  document.querySelectorAll('.tube-circle').forEach(function(tube) {
+    tube.addEventListener('mouseenter', function() {
+      var x = tube.getAttribute('data-x');
+      var y = tube.getAttribute('data-y');
+      var row = tube.getAttribute('data-row');
+      var half = tube.getAttribute('data-half');
+      var r = Math.sqrt(x*x + y*y).toFixed(2);
+      infoBox.innerHTML = '<strong>Selected Tube Hole:</strong> ' + half + ' &bull; <strong>Row ' + row + '</strong> &bull; X = <code>' + x + ' mm</code>, Y = <code>' + y + ' mm</code> &bull; Radial Radius R = <code>' + r + ' mm</code> (OD 8.0 mm)';
+    });
+  });
+
+  var rings = [
+    { cls: 'ring-flange', text: 'Stationary Flange OD: Ø 285.0 mm (R = 142.5 mm)' },
+    { cls: 'ring-pcd', text: 'Bolt Circle (PCD): Ø 260.0 mm (R = 130.0 mm, 12x M12)' },
+    { cls: 'ring-shell', text: 'Shell Bore Inside Diameter: Ø 226.5 mm (R = 113.25 mm)' },
+    { cls: 'ring-float', text: 'Floating Rear Tubesheet OD: Ø 214.0 mm (R = 107.0 mm)' },
+    { cls: 'ring-groove', text: 'Dual Viton O-Ring Groove Root: Ø 207.0 mm (R = 103.5 mm)' },
+    { cls: 'ring-otl', text: 'Discrete Outer Tube Limit (OTL): Ø 191.83 mm (R = 95.92 mm)' }
+  ];
+  rings.forEach(function(r) {
+    document.querySelectorAll('.' + r.cls).forEach(function(el) {
+      el.addEventListener('mouseenter', function() {
+        infoBox.innerHTML = '<strong>Boundary Feature:</strong> <span style="color:#38bdf8;">' + r.text + '</span>';
+      });
+    });
+  });
+</script>
+
+</body>
+</html>
